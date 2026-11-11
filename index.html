@@ -1089,7 +1089,8 @@ function entityMenu(t,inPop){
   body.append(visControl(d,p=>patchToken(id,p)));
   if(MODELS.length){
     const ms=h('select',{'aria-label':'3D-модель',onchange:e=>patchToken(id,{model:e.target.value||null})},
-      h('option',{value:'',text:d.kind==='object'?'нет, маркер':'нет, обычная фишка'}),MODELS.map(m=>h('option',{value:m.id,text:m.name||m.id})));
+      h('option',{value:'',text:d.kind==='object'?'нет, маркер':'нет, обычная фишка'}),
+      MODELS.filter(m=>!m.kind||m.kind===d.kind||m.id===d.model).map(m=>h('option',{value:m.id,text:m.name||m.id})));   /* только модели своего раздела и общие */
     ms.value=d.model||''; body.append(h('div',{class:'row'},h('span',{class:'lbl',text:'Модель'}),ms));
   }
   body.append(h('div',{class:'row'},!inPop&&h('button',{class:'small',text:'Где',onclick:()=>flyToToken(id)}),

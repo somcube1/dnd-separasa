@@ -16,14 +16,29 @@ function evalFile(file, name) {
 const old = evalFile(rel('catalog.js'), 'CATALOG') || { adventures: [], models: [] };
 const known = new Map();
 [...(old.models || []), ...(old.adventures || []).flatMap(a => a.models || [])].forEach(m => known.set(m.path, m));
-function models(dirRel) {
+/* Подпапки сортируют модели по разделам: модель из «герои» видна только у героев и т. д.
+   Модель, лежащая прямо в models, доступна во всех разделах. */
+const KIND_DIRS = { hero: ['heroes', 'герои'], monster: ['monsters', 'монстры'], object: ['objects', 'объекты'] };
+function modelsIn(dirRel, kind) {
   return files(rel(dirRel), '.glb').map(f => {
     const p = dirRel + '/' + f, was = known.get(p) || {}, base = f.replace(/\.glb$/i, '');
     const m = { id: was.id || base, name: was.name || base, path: p };
+    if (kind) m.kind = kind;
     if (was.height) m.height = was.height;
     if (was.rotY) m.rotY = was.rotY;
     return m;
   });
+}
+function models(dirRel) {
+  let list = modelsIn(dirRel, null);
+  if (!isDir(rel(dirRel))) return list;
+  fs.readdirSync(rel(dirRel)).forEach(sub => {
+    if (!isDir(rel(dirRel, sub))) return;
+    const kind = Object.keys(KIND_DIRS).find(k => KIND_DIRS[k].includes(sub.toLowerCase()));
+    if (kind) list = list.concat(modelsIn(dirRel + '/' + sub, kind));
+    else console.warn('Папка ' + dirRel + '/' + sub + ' не похожа на раздел (герои, монстры, объекты), пропускаю');
+  });
+  return list;
 }
 const adventures = [];
 const advRoot = rel('adventures');

@@ -40,22 +40,5 @@ window.CATALOG = {
    "models": []
   }
  ],
- "models": [
-  {
-   "id": "Мимик",
-   "name": "Мимик",
-   "path": "models/Мимик.glb"
-  },
-  {
-   "id": "chest",
-   "name": "Сундук",
-   "path": "models/chest.glb",
-   "height": 0.6
-  },
-  {
-   "id": "rogue",
-   "name": "Плут в плаще",
-   "path": "models/rogue.glb"
-  }
- ]
+ "models": []
 };

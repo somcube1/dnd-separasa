@@ -23,6 +23,11 @@ window.CATALOG = {
  ],
  "models": [
   {
+   "id": "Мимик",
+   "name": "Мимик",
+   "path": "models/Мимик.glb"
+  },
+  {
    "id": "chest",
    "name": "Сундук",
    "path": "models/chest.glb",

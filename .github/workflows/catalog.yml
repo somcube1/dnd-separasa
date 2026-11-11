@@ -1,0 +1,25 @@
+name: Update catalog
+on:
+  push:
+    paths:
+      - 'adventures/**'
+      - 'models/**'
+      - 'tools/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/build-catalog.js
+      - name: Save catalog
+        run: |
+          git config user.name "catalog-bot"
+          git config user.email "catalog-bot@users.noreply.github.com"
+          git add catalog.js
+          git diff --cached --quiet || (git commit -m "Catalog updated" && git push)

@@ -192,6 +192,8 @@ details.tok.off .nm{opacity:.6;font-style:italic}
 .nmw{flex:1;min-width:0;display:flex;flex-direction:column}
 .nmw small{color:var(--muted);font-size:14px}
 .kv span{overflow-wrap:anywhere}
+.tune b{min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+.tune .lbl+button{margin-left:-2px}
 #pop{position:absolute;z-index:30;width:min(340px,calc(100% - 16px));max-height:calc(100% - 16px);overflow:auto;background:var(--panel);
   border:1px solid var(--c,var(--line));border-radius:8px;backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(0,0,0,.5)}
 #pop>header{display:flex;align-items:center;gap:8px;padding:8px 8px 4px 12px}
@@ -555,9 +557,23 @@ function loadModel(m){
     if(!THREE.GLTFLoader)return rej(new Error('no loader'));
     new THREE.GLTFLoader().load(encodeURI(m.path),gl=>res(gl.scene),undefined,rej)}));
 }
+/* Размер и поворот настраиваются на модель целиком: поправил у одной фишки — изменилось у всех с этой моделью */
+let modelCfg=LSJ('dnd-modelcfg',{})||{};
+const cfgOf=id=>Object.assign({scale:1,rot:0},modelCfg[id]||{});
+function tuneModel(t){
+  const w=t.modelObj; if(!w)return; const c=cfgOf(t.modelId);
+  w.scale.setScalar(w.userData.k*c.scale); w.rotation.y=(w.userData.rot+c.rot)*Math.PI/180;
+  t.tagY=w.userData.h*c.scale+.15;   /* подпись держится над головой модели */
+}
+function setModelCfg(id,patch){
+  const c={...cfgOf(id),...patch}; c.scale=Math.max(.3,Math.min(4,Math.round(c.scale*100)/100)); c.rot=((c.rot%360)+360)%360;
+  modelCfg={...modelCfg,[id]:c}; LS('dnd-modelcfg',JSON.stringify(modelCfg));
+  S.tokens.forEach(tuneModel); refreshAll(); changed();
+}
 function applyModel(t){
   const want=t.data.model||null; if(t.modelId===want)return; t.modelId=want;
   if(t.modelObj){t.grp.remove(t.modelObj);t.modelObj=null}
+  t.tagY=null;
   t.base.forEach(o=>o.visible=true);
   const m=want&&modelInfo(want); if(!m)return;
   loadModel(m).then(src=>{
@@ -565,8 +581,8 @@ function applyModel(t){
     const o=src.clone(true), box=new THREE.Box3().setFromObject(o), size=box.getSize(new THREE.Vector3());
     const wrap=new THREE.Group(); wrap.add(o);
     o.position.set(-(box.min.x+size.x/2),-box.min.y,-(box.min.z+size.z/2));
-    wrap.scale.setScalar((m.height||(t.data.kind==='object'?.9:1))/Math.max(size.y,1e-6)); wrap.rotation.y=(m.rotY||0)*Math.PI/180;
-    wrap.traverse(x=>x.userData.tokenId=t.id); t.grp.add(wrap); t.modelObj=wrap; t.base.forEach(b=>b.visible=false);
+    wrap.userData.k=(m.height||(t.data.kind==='object'?.9:1))/Math.max(size.y,1e-6); wrap.userData.rot=m.rotY||0; wrap.userData.h=m.height||(t.data.kind==='object'?.9:1);
+    wrap.traverse(x=>x.userData.tokenId=t.id); t.grp.add(wrap); t.modelObj=wrap; t.base.forEach(b=>b.visible=false); tuneModel(t);
   }).catch(()=>{console.warn('Модель не загрузилась:',m.path)});
 }
 const isDM=()=>S.role==='dm'||S.role==='solo';
@@ -681,7 +697,7 @@ function viewFor(pid,screen){
     if(d.kind==='object')o.text=d.text||'';
     tokens[t.id]=o});
   const edits={}; Object.entries(S.edits).forEach(([n,e])=>{const o={};if(e.read!=null)o.read=e.read;if(e.change!=null)o.change=e.change;edits[n]=o});
-  return {adv:ADV.id,map:MAP.id,revealed:ROOMS.map(r=>r.n).filter(n=>roomOpenFor(n,pid)),focus:S.focus,tokens,edits,
+  return {adv:ADV.id,map:MAP.id,modelCfg,revealed:ROOMS.map(r=>r.n).filter(n=>roomOpenFor(n,pid)),focus:S.focus,tokens,edits,
     log:S.log.filter(e=>seesVis(e,pid)).slice(0,screen?1:80).map(e=>({id:e.id,text:e.text,at:e.at}))};
 }
 /* Партия общая для всех карт приключения: герои (с привязкой к игрокам), список игроков и журнал.
@@ -700,13 +716,14 @@ function importSave(){
   Object.entries(sv.maps||{}).forEach(([m,st])=>LS(AK(m+':state3'),JSON.stringify(st)));
   if(sv.party)LS(AK('party'),JSON.stringify(sv.party));
   if(Array.isArray(sv.presets)&&!LS('dnd-presets')){presets=sv.presets;LS('dnd-presets',JSON.stringify(presets))}
+  if(sv.modelCfg){modelCfg={...modelCfg,...sv.modelCfg};LS('dnd-modelcfg',JSON.stringify(modelCfg))}
   LS(AK('touched'),String(sv.at)); return true;
 }
 /* Выгрузка сохранения: одно на всё приключение — все карты, партия, журнал */
 function exportSave(){
   persist();
   const maps={}; ADV.maps.forEach(m=>{const st=LSJ(AK(m.id+':state3'),null);if(st)maps[m.id]=st});
-  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),presets,maps};
+  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),presets,modelCfg,maps};
   LS(AK('touched'),String(at));
   const d=new Date(at), stamp=d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
   const out='/* Сохранение приключения «'+ADV.title+'» от '+stamp+'. Положи этот файл в папку adventures/'+ADV.id+' вместо старого. */\nwindow.SAVE = '+JSON.stringify(sv)+';\n';
@@ -755,6 +772,7 @@ function applyRemote(st){
   if(followMap(st.map,st.adv))return;
   S.revealed=Array.isArray(st.revealed)?st.revealed:[];
   S.edits=st.edits||{}; S.log=st.log||[];
+  if(st.modelCfg){modelCfg=st.modelCfg;S.tokens.forEach(tuneModel)}
   const seen=new Set(Object.keys(st.tokens||{}));
   [...S.tokens.keys()].forEach(id=>{if(!seen.has(id))removeToken(id)});
   Object.entries(st.tokens||{}).forEach(([id,d])=>{if(d&&typeof d.x==='number')upsertToken(id,d)});
@@ -1092,6 +1110,14 @@ function entityMenu(t,inPop){
       h('option',{value:'',text:d.kind==='object'?'нет, маркер':'нет, обычная фишка'}),
       MODELS.filter(m=>!m.kind||m.kind===d.kind||m.id===d.model).map(m=>h('option',{value:m.id,text:m.name||m.id})));   /* только модели своего раздела и общие */
     ms.value=d.model||''; body.append(h('div',{class:'row'},h('span',{class:'lbl',text:'Модель'}),ms));
+    if(d.model&&modelInfo(d.model)){
+      const c=cfgOf(d.model), btn=(text,label,fn)=>h('button',{class:'small',text,title:label,'aria-label':label,onclick:fn});
+      body.append(h('div',{class:'row tune'},h('span',{class:'lbl',text:'Размер'}),
+          btn('−','Меньше',()=>setModelCfg(d.model,{scale:c.scale-.1})),h('b',{text:Math.round(c.scale*100)+'%'}),btn('+','Больше',()=>setModelCfg(d.model,{scale:c.scale+.1})),
+          h('span',{class:'lbl',text:'Поворот'}),btn('⟲','Повернуть влево',()=>setModelCfg(d.model,{rot:c.rot+45})),h('b',{text:c.rot+'°'}),btn('⟳','Повернуть вправо',()=>setModelCfg(d.model,{rot:c.rot-45})),
+          (c.scale!==1||c.rot!==0)&&btn('Сброс','Вернуть исходный размер и поворот',()=>setModelCfg(d.model,{scale:1,rot:0}))),
+        h('p',{class:'note',text:'Настройка относится к модели: изменится у всех фишек с ней, у игроков тоже.'}));
+    }
   }
   body.append(h('div',{class:'row'},!inPop&&h('button',{class:'small',text:'Где',onclick:()=>flyToToken(id)}),
     h('button',{class:'icon',html:ICON.edit,title:'Редактировать','aria-label':'Редактировать',onclick:()=>{UI.tokEdit=id;refreshAll()}}),
@@ -1345,7 +1371,7 @@ function loop(){
   S.tokens.forEach(tk=>{
     if(!tk.grp.visible){tk.tag.style.display='none';return}
     if(tk.tn.textContent!==tk.data.name)tk.tn.textContent=tk.data.name;
-    place(tk.tag,tk.grp.position.x,tk.spin?1.6:1.05,tk.grp.position.z,w,hh,' translate(-50%,-100%)');
+    place(tk.tag,tk.grp.position.x,tk.tagY||(tk.spin?1.6:1.05),tk.grp.position.z,w,hh,' translate(-50%,-100%)');
   });
   requestAnimationFrame(loop);
 }

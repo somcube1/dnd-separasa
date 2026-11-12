@@ -281,6 +281,141 @@ body.screen .tag{font-size:17px;padding:2px 9px}
   .panel>header h1{font-size:21px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* метки-маячки, видимость, флажки */
+.tag.mark{border-left-style:dotted;font-weight:500;font-style:italic}
+.tag .vis{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:4px;background:rgba(16,22,24,.7);border-radius:9px;padding:2px 4px}
+.vis.onmap{padding:3px 5px}
+.chip.mark{border-style:dashed}
+.check{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:15px}
+.check input,.prow input[type=checkbox]{width:18px;height:18px;accent-color:var(--sea);flex:none;margin:0}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatches button{width:26px;height:26px;border-radius:50%;padding:0;background:var(--c);border:2px solid transparent}
+.swatches button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg) inset}
+.entry .auto{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--soft);border-radius:8px;padding:0 6px}
+
+/* полоса ИГРА / БОЙ */
+body.has-cb .col{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
+#cb{position:absolute;inset:0;pointer-events:none;z-index:15;font-family:var(--body)}
+#cb[hidden]{display:none}
+#cb .cbstack{position:absolute;left:50%;transform:translateX(-50%);bottom:90px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}
+#cb .turn{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px 8px 16px;backdrop-filter:blur(6px);box-shadow:0 8px 24px rgba(0,0,0,.45)}
+#cb .tleft{display:flex;flex-direction:column;gap:3px;min-width:150px}
+#cb .tlabel{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+#cb .tlabel b{color:var(--ink);letter-spacing:.02em;text-transform:none;font-size:15px}
+#cb .tdig{font:700 34px/1 var(--display);color:var(--ink);font-variant-numeric:tabular-nums}
+#cb .tdig.low{color:var(--blood)}
+#cb .tdig.paused{opacity:.55}
+#cb .tbar{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+#cb .tbar i{display:block;height:100%;width:100%;background:var(--torch);transition:width .25s linear}
+#cb .tbtns{display:flex;flex-direction:column;gap:6px}
+#cb .tbtns>div{display:flex;gap:6px}
+#cb .tbtns button{font:600 13.5px var(--body);padding:6px 12px;white-space:nowrap;flex:1}
+#cb .tbtns button.go{border-color:var(--torch);color:#1a1209;background:var(--torch)}
+#cb .mode{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel);box-shadow:0 6px 18px rgba(0,0,0,.4)}
+#cb .mode button,#cb .plate{font:700 15px var(--display);letter-spacing:.12em;color:var(--muted);background:transparent;border:0;border-radius:0;padding:7px 22px;display:flex;align-items:center;gap:8px}
+#cb .mode button+button{border-left:1px solid var(--line)}
+#cb .mode button.on,#cb .plate{color:#1a1209;background:var(--torch)}
+#cb .mode button.on.fight,#cb .plate.fight{background:var(--blood);color:#fff}
+#cb .mode button.open{box-shadow:inset 0 -3px 0 var(--sea)}
+#cb .mode small,#cb .plate small{font:500 11.5px var(--body);letter-spacing:0;opacity:.8}
+#cb .plate{border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+#cb .ptr{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:11px solid var(--torch);margin-top:-1px}
+#cb .strip{position:absolute;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));height:70px;background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--torch);border-radius:8px;overflow:hidden;pointer-events:auto;backdrop-filter:blur(6px)}
+#cb.fight .strip{border-top-color:var(--blood)}
+#cb .track{position:absolute;top:0;bottom:0;left:0;display:flex;align-items:stretch;gap:6px;padding:7px 0}
+#cb .cell{flex:none;width:168px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-left:4px solid var(--c);padding:5px 10px 5px 9px;display:flex;flex-direction:column;justify-content:center;gap:3px;position:relative;cursor:default}
+#cb .cell.go{cursor:pointer}
+#cb .cell .top{display:flex;align-items:baseline;gap:7px;padding-right:44px}
+#cb.game .cell .top{padding-right:0}
+#cb .cell .n{font:700 15px var(--display);color:var(--muted)}
+#cb .cell .nm{font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#cb .cell .ini{position:absolute;right:8px;top:5px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+#cb .cell .sb{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+#cb .cell.hid .nm{font-style:italic}
+#cb .hpb{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;max-width:70px}
+#cb .hpb i{display:block;height:100%;background:var(--blood)}
+#cb .cell.done{opacity:.45}
+#cb .cell.next{opacity:.55}
+#cb .cell.out{opacity:.3}
+#cb .cell.out .nm{text-decoration:line-through}
+#cb .cell.act{background:rgba(227,160,75,.16);border-color:var(--torch);border-left-color:var(--c);box-shadow:0 0 0 1px var(--torch),0 0 18px rgba(227,160,75,.35)}
+#cb .cell.act .nm{color:var(--torch)}
+#cb .div{flex:none;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--torch);font:700 13px var(--display);letter-spacing:.06em;border-left:1px dashed var(--line);border-right:1px dashed var(--line);white-space:nowrap}
+#cb .div span{font-size:20px;line-height:1}
+#cb .hint{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:14.5px;padding:0 70px;text-align:center}
+#cb .arr{position:absolute;top:0;bottom:0;width:58px;display:grid;place-items:center;color:var(--ink);font-size:16px;z-index:2;border:0;border-radius:0;padding:0}
+#cb .arr.l{left:0;background:linear-gradient(90deg,rgba(16,22,24,.98) 45%,transparent)}
+#cb .arr.r{right:0;background:linear-gradient(270deg,rgba(16,22,24,.98) 45%,transparent)}
+#cb .arr b{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:var(--panel)}
+#cb .arr:hover b{border-color:var(--torch);color:var(--torch)}
+/* окно очередности */
+#cb .setup{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);width:min(780px,calc(100% - 28px));max-height:calc(100% - 170px);background:rgba(16,22,24,.97);border:1px solid var(--torch);border-radius:10px;box-shadow:0 18px 40px rgba(0,0,0,.6);pointer-events:auto;display:flex;flex-direction:column;z-index:5}
+#cb .setup.fight{border-color:var(--blood)}
+#cb .setup[hidden]{display:none}
+#cb .setup>header{display:flex;align-items:center;gap:10px;padding:10px 10px 8px 16px}
+#cb .setup h3{font:700 22px var(--display);color:var(--ink);margin:0;flex:1}
+#cb .setup h3 small{font:500 13px var(--body);color:var(--muted);margin-left:6px}
+#cb .setup .cols{display:grid;grid-template-columns:1.2fr 1fr;border-top:1px solid var(--line);min-height:0;overflow:auto}
+#cb .setup .cols>div{display:flex;flex-direction:column;min-width:0}
+#cb .setup .cols>div+div{border-left:1px solid var(--line)}
+#cb .setup .sec{padding:10px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+#cb .setup .cols .sec:first-child{border-top:0}
+#cb .setup .heads{display:flex;justify-content:space-between}
+#cb .prow{display:flex;align-items:center;gap:8px;font-size:14.5px;padding:3px 6px;border-radius:5px;background:rgba(255,255,255,.03)}
+#cb .prow.cur{box-shadow:inset 0 0 0 1px var(--torch)}
+#cb .prow.over{box-shadow:inset 0 2px 0 var(--sea)}
+#cb .prow .h{color:var(--muted);letter-spacing:-2px;font-size:15px;cursor:grab;padding:0 2px}
+#cb .prow .o{font:700 15px var(--display);color:var(--torch);width:16px}
+#cb .prow .d{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+#cb .prow .nm{flex:1;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#cb .prow .k{font-size:12px;color:var(--muted);width:62px}
+#cb .prow .mv{padding:0;width:24px;height:24px;font-size:10px;color:var(--muted)}
+#cb .prow .iv{width:52px;text-align:center;padding:3px 2px;font-variant-numeric:tabular-nums}
+#cb .prow.off{opacity:.45}
+#cb .line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14.5px}
+#cb .num{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+#cb .num button{border:0;border-radius:0;padding:3px 11px}
+#cb .num b{padding:3px 10px;border-left:1px solid var(--line);border-right:1px solid var(--line);font-variant-numeric:tabular-nums}
+#cb .start{margin:auto 16px 14px;font:700 17px var(--display);letter-spacing:.08em;background:var(--blood);color:#fff;border:0;border-radius:6px;padding:10px}
+#cb .start.calm{background:transparent;border:1px solid var(--line);color:var(--ink)}
+#cb .start:disabled{opacity:.4}
+/* экран игроков: крупнее, без кнопок и хитов монстров */
+#cb.tv .strip{height:92px;left:24px;right:24px;bottom:22px}
+#cb.tv .cell{width:220px;padding:6px 14px}
+#cb.tv .cell .nm{font-size:20px}
+#cb.tv .cell .n{font-size:19px}
+#cb.tv .cell .sb{font-size:14px}
+#cb.tv .cell .top{padding-right:0}
+#cb.tv .cbstack{bottom:116px;pointer-events:none}
+#cb.tv .plate{font-size:18px;padding:8px 26px}
+#cb .tvtimer{position:absolute;right:28px;top:22px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 20px;backdrop-filter:blur(6px)}
+#cb .tvtimer .tlabel{font-size:15px}
+#cb .tvtimer .tlabel b{font-size:22px}
+#cb .tvtimer .tdig{font-size:64px}
+#cb .tvtimer .tbar{width:220px;height:5px}
+.scr-log{bottom:auto;top:calc(18px + env(safe-area-inset-top,0px))}
+.scr-card{position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));width:min(36vw,600px);max-height:60%;overflow:hidden;
+  background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--torch);border-radius:8px;padding:14px 20px 16px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(6px);box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.scr-card[hidden]{display:none}
+.scr-card h3{font:700 clamp(22px,2.2vw,34px)/1.1 var(--display);color:var(--torch)}
+.scr-card p{font-size:clamp(16px,1.35vw,22px);line-height:1.4;white-space:pre-wrap}
+.scr-card .chg{color:var(--sea);border-top:1px solid var(--soft);padding-top:8px}
+body.has-cb .scr-card{bottom:176px}
+body.has-cb .scr-tools{bottom:176px}
+body.screen:not(.fs) .scr-tools{opacity:1}
+@media (max-width:860px){
+  body.has-cb .col{bottom:auto}
+  .panel,#pSession{z-index:20}
+  #cb .strip{left:6px;right:6px;bottom:calc(58px + env(safe-area-inset-bottom,0px));height:58px}
+  #cb .cell{width:132px}
+  #cb .cbstack{bottom:calc(122px + env(safe-area-inset-bottom,0px))}
+  #cb .turn{padding:6px 8px 6px 10px;gap:8px}
+  #cb .tleft{min-width:100px}
+  #cb .tdig{font-size:26px}
+  #cb .setup{bottom:calc(60px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 70px)}
+  #cb .setup .cols{grid-template-columns:1fr}
+  #cb .setup .cols>div+div{border-left:0;border-top:1px solid var(--line)}
+}
 </style>
 </head>
 <body>
@@ -289,7 +424,7 @@ body.screen .tag{font-size:17px;padding:2px 9px}
   <div id="labels"></div>
   <div id="ui">
     <div class="col" id="colL">
-      <section class="panel" id="pSession" data-tab="Сессия">
+      <section class="panel" id="pSession" data-tab="Экран">
         <header><div class="ttl"><span class="eyebrow" data-map-subtitle></span><h1 data-map-title></h1></div><span class="grow"></span><button class="fold" aria-label="Свернуть блок"></button></header>
         <div class="body"><p class="status" id="status"><i></i><span>Загружаю карту…</span></p><div class="stack" id="sessionBody"></div></div>
       </section>
@@ -310,11 +445,13 @@ body.screen .tag{font-size:17px;padding:2px 9px}
     </div>
     <nav id="tabs" aria-label="Блоки"></nav>
   </div>
+  <div id="cb" hidden></div>
   <div id="pop" hidden></div>
   <div id="screenUI" hidden>
     <div class="scr-title"><span class="eyebrow" data-map-title></span><strong id="scrRoom"></strong></div>
     <div class="scr-log" id="scrLog" hidden></div>
-    <div class="scr-tools"><span class="scr-status" id="scrStatus"></span><button id="fsBtn">На весь экран</button><button id="scrLeave">Выйти</button></div>
+    <div class="scr-card" id="scrCard" hidden></div>
+    <div class="scr-tools"><span class="scr-status" id="scrStatus"></span><button id="fsBtn">На весь экран</button><button id="scrLeave">Закрыть</button></div>
   </div>
 </div>
 
@@ -323,7 +460,7 @@ body.screen .tag{font-size:17px;padding:2px 9px}
     <header class="hero">
       <p class="eyebrow">Playable · стол для игровых сессий</p>
       <h1>D&amp;D Separasa 2.0</h1>
-      <p class="greet">Приветствую, путник. Перед тобой универсальный стол для игровых сессий D&amp;D: карты, фишки, туман войны и общий экран в одном месте.</p>
+      <p class="greet">Приветствую, путник. Перед тобой универсальный стол для игровых сессий D&amp;D: карты, фишки, туман войны, очередь ходов и экран для игроков в одном месте.</p>
       <p class="greet">Мы рады видеть тебя у нашего очага. Пусть кампании будут долгими, золота побольше, а критических неудач поменьше.</p>
     </header>
     <section class="quests">
@@ -344,19 +481,19 @@ body.screen .tag{font-size:17px;padding:2px 9px}
 
     <section><h2><span>Кто есть кто</span></h2>
       <dl>
-        <dt>Мастер</dt><dd>Ведёт игру и видит всё: скрытые комнаты, монстров в засаде, ловушки и собственные заметки. Двигает фишки, открывает карту, пишет журнал.</dd>
-        <dt>Игрок</dt><dd>Подключается по ссылке мастера и видит только то, что мастер открыл. Может двигать своего героя, если мастер это разрешил.</dd>
-        <dt>Общий экран</dt><dd>Карта без кнопок и панелей для монитора или телевизора. Показывает лишь то, что открыто всем сразу.</dd>
+        <dt>Мастер</dt><dd>Ведёт игру и видит всё: скрытые комнаты, монстров в засаде, ловушки и собственные заметки. Двигает фишки, открывает карту, ведёт очередь ходов и журнал.</dd>
+        <dt>Экран для игроков</dt><dd>Второе окно для телевизора или монитора, на который смотрит партия. В нём нет кнопок и панелей, и показывает оно лишь то, что мастер открыл.</dd>
       </dl>
     </section>
 
     <section><h2><span>Как начать игру</span></h2>
       <ol>
-        <li>Мастер выбирает приключение на доске квестов и нажимает «Создать сессию».</li>
-        <li>Появляется код сессии и две кнопки: «Ссылка для игроков» и «Ссылка для экрана». Первую мастер отправляет партии, вторую открывает там, где висит общий монитор.</li>
-        <li>Игрок переходит по ссылке и вписывает своё имя. По имени мастер закрепит за ним героя.</li>
-        <li>Пока идёт игра, мастер не закрывает свою вкладку: вся партия держится за неё.</li>
+        <li>Мастер подключает к своему компьютеру телевизор или второй монитор. В Windows нажимает Win+P и выбирает «Расширить», чтобы телевизор стал отдельным экраном, а не копией.</li>
+        <li>Выбирает приключение на доске квестов и в блоке «Экран» нажимает «Открыть экран для игроков».</li>
+        <li>Появившееся окно перетаскивает на телевизор и нажимает в нём «На весь экран».</li>
+        <li>Всё. Интернет для связи двух окон не нужен: они живут в одном браузере. Главное, не закрывать окно мастера.</li>
       </ol>
+      <p>Если окно для игроков случайно закрыли или обновили, оно само подхватит карту заново.</p>
     </section>
 
     <section><h2><span>Как смотреть на карту</span></h2>
@@ -369,45 +506,69 @@ body.screen .tag{font-size:17px;padding:2px 9px}
       </ul>
     </section>
 
-    <section><h2><span>Кто что видит</span></h2>
-      <p>У комнат, героев, монстров, объектов и записей журнала один и тот же переключатель:</p>
+    <section><h2><span>Что видят игроки</span></h2>
+      <p>У комнат, героев, монстров, объектов, меток и записей журнала один и тот же переключатель из двух положений:</p>
       <dl>
-        <dt>Никто</dt><dd>Видит только мастер. Для засад и секретов.</dd>
-        <dt>Все</dt><dd>Видят игроки и общий экран.</dd>
-        <dt>Все, кроме…</dt><dd>Видят все, за исключением названных игроков. Имя можно вписать заранее, до начала игры.</dd>
+        <dt>Скрыть</dt><dd>Видит только мастер. Для засад и секретов.</dd>
+        <dt>Показать</dt><dd>Видно на экране для игроков.</dd>
       </dl>
-      <p>У мастера рядом с каждой вещью стоит метка: глаз означает «видят», перечёркнутый глаз означает «не видят». Фишка в скрытой комнате не видна, даже если сама открыта.</p>
+      <p>У мастера рядом с каждой вещью стоит метка: глаз означает «игроки видят», перечёркнутый глаз означает «скрыто». Фишка в скрытой комнате не видна, даже если сама открыта. Проверить себя можно переключателем «Как у игроков» в блоке комнат.</p>
+    </section>
+
+    <section><h2><span>Чем управляется экран для игроков</span></h2>
+      <ul>
+        <li>«Показать на экране» у комнаты открывает её игрокам, поворачивает к ней экран и выводит карточку с описанием и изменениями.</li>
+        <li>«Показать на экране» у объекта выводит карточку с его описанием. Кнопка «Убрать» снимает карточку.</li>
+        <li>«Навести экран» просто поворачивает экран к комнате, «Экран: весь план» возвращает общий вид.</li>
+        <li>Галочка «Экран повторяет мою камеру» заставляет экран смотреть туда же, куда смотрит мастер. Сними её, если хочешь спокойно подглядывать в скрытые углы.</li>
+      </ul>
     </section>
 
     <section><h2><span>Фишки и объекты</span></h2>
       <ul>
-        <li>Три раздела: герои, монстры и объекты. Добавляются кнопками быстрого набора.</li>
+        <li>Четыре раздела: герои, монстры, объекты и метки. Добавляются кнопками быстрого набора.</li>
         <li>Фишки перетаскиваются по карте и встают в центр клетки. Одна клетка равна пяти футам.</li>
-        <li>Клик по фишке на карте открывает её меню: видимость, хиты, фигурка, удаление.</li>
+        <li>Две фишки в одной клетке не стоят: если место занято, фишка встанет в ближайшую свободную клетку рядом. Колонны, сундуки, столы, бочки, статуи и прочие крупные предметы тоже занимают свои клетки: герой или монстр туда не встанет (объект-подсказка к предмету и метка встают на предмет).</li>
+        <li>Клик по фишке на карте открывает её меню: видимость, хиты, фигурка, удаление. Меню появляется сбоку и фишку не закрывает.</li>
         <li>У монстров есть счётчик хитов. Кнопки «−» и «+» меняют его на единицу, с зажатым Shift сразу на пять.</li>
-        <li>Героя мастер закрепляет за игроком и решает, кто его двигает: сам мастер или игрок.</li>
-        <li>Объект — это то, на что можно нажать: сундук, рычаг, надпись на стене. Игрок увидит описание, мастер ещё и свою заметку.</li>
-        <li>Фигурку для фишки выбирают в поле «Модель». Там же настраиваются её размер и поворот, сразу для всех таких фигурок.</li>
+        <li>Объект — это то, на что можно обратить внимание: сундук, рычаг, надпись на стене. Игрокам достаётся описание, мастеру ещё и своя заметка.</li>
+        <li>Фигурку для фишки выбирают в поле «Модель». Размер и поворот у каждой фишки свои: поверни одного мимика, остальные останутся как были.</li>
         <li>Блок с фишками разворачивается на весь экран кнопкой с рамкой в заголовке.</li>
       </ul>
     </section>
 
+    <section><h2><span>Метки</span></h2>
+      <p>Метка показывает на карте область или ориентир: огненный шар, облако тумана, стену огня, место засады. У неё настраиваются форма (круг, квадрат, конус, линия), размер в клетках, поворот, цвет и название. Метка ставится поверх чего угодно, клетку не занимает и скрывается от игроков так же, как всё остальное.</p>
+    </section>
+
     <section><h2><span>Комнаты</span></h2>
       <ul>
-        <li>«Описание» читается игрокам вслух, они видят его и у себя.</li>
+        <li>«Описание» читается игрокам вслух и выводится на экран карточкой.</li>
         <li>«Изменчивость» — короткая пометка о том, что в комнате стало не так, как в описании: дверь выбита, костёр потух, сундук пуст. Игроки её тоже видят.</li>
         <li>«Для мастера» остаётся только у мастера: проверки, урон, сюрпризы.</li>
         <li>Любой из трёх текстов правится на ходу кнопкой с карандашом.</li>
-        <li>«Открыть всем и навести камеры» показывает комнату партии и поворачивает к ней все экраны.</li>
+      </ul>
+    </section>
+
+    <section><h2><span>Игра и бой: очередь ходов</span></h2>
+      <p>Внизу тянется лента с очередью ходов. Стрелка сверху указывает на того, чей сейчас ход; те, кто уже сходил, тускнеют; за разделителем начинается следующий раунд. Над лентой два блока: «ИГРА» и «БОЙ».</p>
+      <ul>
+        <li>«ИГРА» — спокойный режим. В очереди стоят герои, раунды считаются, таймер можно включить по желанию.</li>
+        <li>«БОЙ» — нажми на блок, и откроется окно подготовки. Расставь участников по порядку: перетащи за точки слева, подвинь стрелками или впиши инициативу и нажми «По инициативе». Кубик бросит к20 за всех монстров разом. Галочка справа убирает участника из боя.</li>
+        <li>Там же настраивается таймер хода: сколько времени, для кого считать (только герои, все или никто) и что делать, когда время вышло (подать сигнал или сразу передать ход).</li>
+        <li>«Начать бой» запускает первый раунд. «Завершить ход» передаёт ход дальше, не дожидаясь таймера. Есть пауза и шаг назад, если поторопился.</li>
+        <li>Монстр с нулём хитов зачёркивается, и очередь его пропускает.</li>
+        <li>Если включена запись в журнал, туда сами попадают начало и конец боя, раунды, время ходов и павшие монстры.</li>
+        <li>Игроки видят на экране ту же ленту, плашку «БОЙ · раунд» и крупный таймер. Хиты монстров им не показываются, а скрытый участник значится как «Некто».</li>
       </ul>
     </section>
 
     <section><h2><span>Бортовой журнал</span></h2>
-      <p>Хроника игры, которую ведёт мастер. У каждой записи своя видимость: общие события видят все, тайные достаются избранным. Последняя открытая запись крупно выводится на общий экран.</p>
+      <p>Хроника игры, которую ведёт мастер. Каждую запись можно показать игрокам или скрыть. Последняя показанная запись мастера выводится на экран строкой сверху.</p>
     </section>
 
     <section><h2><span>Переход на другую карту</span></h2>
-      <p>В блоке сессии мастер выбирает карту и нажимает «Перейти со всеми». Игроки и общий экран переходят следом, ссылки остаются прежними. Герои и журнал отправляются в путь вместе с партией, а монстры, объекты и открытые комнаты остаются ждать на своей карте.</p>
+      <p>В блоке «Экран» мастер выбирает карту и нажимает «Перейти». Экран для игроков переходит следом. Герои, их очередь и журнал отправляются в путь вместе с партией, а монстры, объекты, метки и открытые комнаты остаются ждать на своей карте.</p>
     </section>
 
     <section><h2><span>Как не потерять игру</span></h2>
@@ -420,9 +581,10 @@ body.screen .tag{font-size:17px;padding:2px 9px}
     <section><h2><span>Если что-то пошло не так</span></h2>
       <dl>
         <dt>Карта не обновляется или выглядит странно</dt><dd>Обнови страницу сочетанием Ctrl+F5.</dd>
-        <dt>У игрока надпись «Жду мастера»</dt><dd>Мастер закрыл вкладку или переходит на другую карту. Подключение восстановится само, как только он вернётся.</dd>
-        <dt>Игрок не видит своего героя</dt><dd>Проверь, открыта ли ему комната и не стоит ли у героя видимость «Никто».</dd>
-        <dt>Герой не двигается</dt><dd>Мастер ещё не закрепил его за тобой или оставил управление себе.</dd>
+        <dt>Окно для игроков не открылось</dt><dd>Браузер придержал всплывающее окно. Разреши их для этого сайта: значок появится в адресной строке.</dd>
+        <dt>На экране надпись «Жду мастера»</dt><dd>Окно мастера закрыто или открыто в другом браузере. Оба окна должны жить в одном браузере на одном компьютере.</dd>
+        <dt>Телевизор показывает то же, что и ноутбук</dt><dd>Он работает как копия. Нажми Win+P и выбери «Расширить».</dd>
+        <dt>Игроки не видят фишку</dt><dd>Проверь, показана ли им комната и не стоит ли у фишки «Скрыть».</dd>
       </dl>
     </section>
 
@@ -441,7 +603,6 @@ body.screen .tag{font-size:17px;padding:2px 9px}
 <script src="libs/three.min.js"></script>
 <script src="libs/OrbitControls.js"></script>
 <script src="libs/GLTFLoader.js"></script>
-<script src="libs/peerjs.min.js"></script>
 <script src="catalog.js"></script>
 <script>
 /* index.html?adv=<папка приключения>&map=<id карты>. Сначала подключаем сохранение приключения, если оно есть. */
@@ -485,6 +646,7 @@ function showLibrary(){
 (function(){
 if(!window.MAP||!window.ADV){showLibrary();return}
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SCREEN=new URLSearchParams(location.search).has('screen');   /* это окно — «Экран для игроков» */
 
 /* ---------- План из MAP: # скала, . пол, D дверь, S потайная дверь, P колонна, ^ плита-ловушка, w вода ---------- */
 const MAP=window.MAP;
@@ -505,7 +667,7 @@ document.querySelectorAll('[data-map-subtitle]').forEach(e=>e.textContent=[windo
 const SPAN=Math.max(W,H);
 const app=document.getElementById('app'), canvas=document.getElementById('c');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setPixelRatio(SCREEN?1:Math.min(devicePixelRatio,2));   /* экрану игроков хватает обычной чёткости: так он не тормозит */
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0d1214);
 scene.fog=new THREE.Fog(0x0d1214,SPAN*1.3,SPAN*2.6);
@@ -619,6 +781,17 @@ const PROPS={
   glow(p,x,z){const l=new THREE.PointLight(new THREE.Color(p.color||'#ffc35a'),p.power||.8,p.reach||6,2);l.position.set(x,p.height||.8,z);scene.add(l)}
 };
 (MAP.props||[]).forEach(p=>{const fn=PROPS[p.type];if(fn)fn(p,p.at[0],p.at[1]);else console.warn('Неизвестный предмет',p.type)});
+/* занятые предметами клетки: герои и монстры туда не встанут */
+const FOOT={chest:[.4,.3],sarcophagus:[.45,.5],statue:[.4,.4],barrel:[.3,.3],crate:[.3,.3],bed:[.4,.85],throne:[.45,.4],bookshelf:[.5,.2],well:[.6,.6],brazier:[.3,.3]};
+const blocked=new Set();
+(MAP.props||[]).forEach(p=>{
+  let f=FOOT[p.type]; if(p.type==='altar')f=[(p.width||1.7)/2,(p.depth||1)/2]; if(p.type==='table')f=[(p.width||1.6)/2,(p.depth||.8)/2]; if(!f)return;
+  const [px,pz]=p.at, c=Math.cos(p.rot||0), s=Math.sin(p.rot||0);
+  for(let y=Math.floor(pz-f[1]-1);y<=Math.ceil(pz+f[1]+1);y++)for(let x=Math.floor(px-f[0]-1);x<=Math.ceil(px+f[0]+1);x++){
+    if(!inside(x,y))continue;
+    if([[.5,.5],[.2,.5],[.8,.5],[.5,.2],[.5,.8]].some(([a,b])=>{const dx=x+a-px,dz=y+b-pz,lx=dx*c-dz*s,lz=dx*s+dz*c;return Math.abs(lx)<=f[0]&&Math.abs(lz)<=f[1]}))blocked.add(x+','+y);
+  }
+});
 (MAP.torches||[]).forEach(([x,z])=>{add(new THREE.CylinderGeometry(.035,.05,.4,8),wood,x,1.0,z);fireAt(x,1.25,z)});
 
 const gp=[];
@@ -645,6 +818,8 @@ const KEY=k=>AK(MAP.id+':'+k);
 const mapUrl=(id,adv)=>location.pathname+'?adv='+encodeURIComponent(adv||ADV.id)+'&map='+encodeURIComponent(id);
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const $=id=>document.getElementById(id);
+/* false/null в append не превращаются в текст «false» */
+(()=>{for(const P of [Element.prototype,DocumentFragment.prototype]){const a=P.append;P.append=function(...k){return a.apply(this,k.filter(x=>x!=null&&x!==false&&x!==''))}}})();
 function h(tag,attrs,...kids){
   const e=document.createElement(tag);
   if(attrs)for(const [k,v] of Object.entries(attrs)){
@@ -666,11 +841,12 @@ const ICON={
 };
 
 /* ---------- Состояние ---------- */
-/* Видимость любой сущности (комната, фишка, объект, запись журнала): vis = 'none' | 'all' | 'except', except = [id игрока | '@имя'] */
-const S={role:'solo',view:'dm',roomVis:{},revealed:[],focus:null,current:null,tokens:new Map(),players:{},log:[],edits:{}};
-const ME={pid:LS('dnd-player-id')||('p'+uid()),name:LS('dnd-player-name')||''};
-LS('dnd-player-id',ME.pid);
-const UI={edit:null,openTok:new Set(),presetEdit:false,tokEdit:null,tab:null,pop:null,openLog:null,logVis:{vis:'all',except:[]},logText:'',tokTab:'hero'};
+/* Видимость любой сущности (комната, фишка, объект, метка, запись журнала): vis = 'all' (показано игрокам) | 'none' (скрыто) */
+const newCb=()=>({mode:'game',t:null,
+  game:{list:[],cur:null,round:1,run:true,sec:60,tFor:'none',tEnd:'signal',log:false},
+  fight:{list:[],cur:null,round:1,run:false,sec:60,tFor:'hero',tEnd:'signal',log:true}});
+const S={role:SCREEN?'screen':'dm',view:SCREEN?'players':'dm',roomVis:{},revealed:[],focus:null,current:null,tokens:new Map(),log:[],edits:{},show:null,card:null,cb:newCb(),pub:null};
+const UI={edit:null,openTok:new Set(),presetEdit:false,tokEdit:null,tab:null,pop:null,openLog:null,logVis:'all',logText:'',tokTab:'hero',follow:LS('dnd-follow')==='1',setup:null,cbShift:0};
 const DEFAULT_PRESETS=[
   {name:'Скелет',kind:'monster',hp:13,dmg:'1к6+2 колющий',feat:'Уязвим к дробящему'},
   {name:'Зомби',kind:'monster',hp:22,dmg:'1к6+1 дробящий',feat:'Стойкость нежити: Тел Сл 5+урон, остаётся с 1 хитом'},
@@ -688,19 +864,19 @@ function loadModel(m){
     if(!THREE.GLTFLoader)return rej(new Error('no loader'));
     new THREE.GLTFLoader().load(encodeURI(m.path),gl=>res(gl.scene),undefined,rej)}));
 }
-/* Размер и поворот настраиваются на модель целиком: поправил у одной фишки — изменилось у всех с этой моделью */
-let modelCfg=LSJ('dnd-modelcfg',{})||{};
-const cfgOf=id=>Object.assign({scale:1,rot:0},modelCfg[id]||{});
+/* Размер и поворот у каждой фишки свои: поля mScale и mRot в её данных */
+let modelCfg=LSJ('dnd-modelcfg',{})||{};   /* наследие прошлых версий: при загрузке переносится в фишки */
+const tuneOf=d=>({scale:d.mScale||1,rot:d.mRot||0});
 function tuneModel(t){
-  const w=t.modelObj; if(!w)return; const c=cfgOf(t.modelId);
+  const w=t.modelObj; if(!w)return; const c=tuneOf(t.data);
   w.scale.setScalar(w.userData.k*c.scale); w.rotation.y=(w.userData.rot+c.rot)*Math.PI/180;
   t.tagY=w.userData.h*c.scale+.15;   /* подпись держится над головой модели */
 }
-function setModelCfg(id,patch){
-  const c={...cfgOf(id),...patch}; c.scale=Math.max(.3,Math.min(4,Math.round(c.scale*100)/100)); c.rot=((c.rot%360)+360)%360;
-  modelCfg={...modelCfg,[id]:c}; LS('dnd-modelcfg',JSON.stringify(modelCfg));
-  S.tokens.forEach(tuneModel); refreshAll(); changed();
+function setTune(id,patch){
+  const t=S.tokens.get(id); if(!t)return; const c={...tuneOf(t.data),...patch};
+  patchToken(id,{mScale:Math.max(.3,Math.min(4,Math.round(c.scale*100)/100)),mRot:((c.rot%360)+360)%360});
 }
+const legacyTune=d=>{const c=d&&d.model&&d.mScale==null&&modelCfg[d.model];return c?{...d,mScale:c.scale||1,mRot:c.rot||0}:d};
 function applyModel(t){
   const want=t.data.model||null; if(t.modelId===want)return; t.modelId=want;
   if(t.modelObj){t.grp.remove(t.modelObj);t.modelObj=null}
@@ -716,46 +892,33 @@ function applyModel(t){
     wrap.traverse(x=>x.userData.tokenId=t.id); t.grp.add(wrap); t.modelObj=wrap; t.base.forEach(b=>b.visible=false); tuneModel(t);
   }).catch(()=>{console.warn('Модель не загрузилась:',m.path)});
 }
-const isDM=()=>S.role==='dm'||S.role==='solo';
-const remote=()=>S.role==='player'||S.role==='screen';
+const isDM=()=>S.role==='dm';
+const remote=()=>S.role==='screen';
 const masterView=()=>isDM()&&S.view==='dm';
 function cellRoom(x,z){const cx=Math.floor(x),cy=Math.floor(z);return isOpen(cx,cy)?roomOf[cy][cx]:0}
-/* pid=null — «открыто всем»: общий экран и предпросмотр мастера */
-const seesVis=(o,pid)=>o.vis==='all'||(o.vis==='except'&&!!pid&&!(o.except||[]).includes(pid));
-const roomVis=n=>S.roomVis[n]||{vis:'none',except:[]};
-const roomOpenFor=(n,pid)=>seesVis(roomVis(n),pid);
-const tokenOpenFor=(d,pid)=>seesVis(d,pid)&&roomOpenFor(cellRoom(d.x,d.z),pid);
+const shown=o=>!!o&&o.vis==='all';
+const normVis=o=>{if(o){o.vis=o.vis==='all'?'all':'none';delete o.except}return o};   /* старое «все, кроме…» становится «скрыто» */
+const roomVis=n=>S.roomVis[n]||{vis:'none'};
+const roomOpen=n=>shown(roomVis(n));
+const tokenOpen=d=>shown(d)&&roomOpen(cellRoom(d.x,d.z));
 function shownRooms(){
   if(remote())return new Set(S.revealed);
-  return new Set(ROOMS.map(r=>r.n).filter(n=>masterView()?roomVis(n).vis!=='none':roomOpenFor(n,null)));
+  return new Set(ROOMS.map(r=>r.n).filter(roomOpen));
 }
 const roomListed=n=>masterView()||shownRooms().has(n);
-const tokenShown=t=>remote()||masterView()||tokenOpenFor(t.data,null);
+const tokenShown=t=>remote()||masterView()||tokenOpen(t.data);
 const roomText=(r,f)=>{const e=S.edits[r.n];return e&&e[f]!=null?e[f]:(r[f]||'')};
-const playerName=pid=>(S.players[pid]&&S.players[pid].name)||'Игрок';
-const exName=k=>k[0]==='@'?k.slice(1):playerName(k);
 
-/* кто видит: глаз — видят, зачёркнутый глаз — не видят (только для мастера) */
+/* метка мастера: глаз — игроки видят, зачёркнутый глаз — скрыто */
 const EYE='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const EYE_OFF='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 3l16 18"/></svg>';
-const pendingOf=o=>o.vis==='except'?(o.except||[]).filter(k=>k[0]==='@').map(k=>k.slice(1)):[];
-function visParts(fn,pendingNo,o,roomO){
-  const ps=Object.keys(S.players), scr=fn(null), see=ps.filter(p=>fn(p)), no=ps.filter(p=>!fn(p)).map(playerName).concat(pendingNo||[]);
-  if(!no.length&&scr)return {see:'видят все',no:''};
-  if(!see.length&&!scr){
-    /* «все, кроме…», но из подключённых пока только те, от кого скрыто: остальные увидят, когда зайдут */
-    if(o&&o.vis==='except'&&(o.except||[]).length&&(!roomO||roomO.vis==='all'))return {see:'остальные',no:[...no,'экран'].join(', ')};
-    return {see:'',no:'не видит никто'};
-  }
-  return {see:[...see.map(playerName),scr?'экран':null].filter(Boolean).join(', '),no:[...no,scr?null:'экран'].filter(Boolean).join(', ')};
-}
-function fillVis(el,fn,o,roomO){
-  const p=visParts(fn,o?pendingOf(o):[],o,roomO); el.innerHTML='';
-  if(p.see)el.append(h('span',{class:'v yes',title:'Видят: '+p.see},h('span',{html:EYE}),p.see));
-  if(p.no)el.append(h('span',{class:'v no',title:'Не видят: '+p.no},h('span',{html:EYE_OFF}),p.no));
+function fillVis(el,on,why,short){
+  el.innerHTML='';
+  el.append(h('span',{class:'v '+(on?'yes':'no'),title:on?'Игроки видят':(why?'Игроки не видят: '+why:'Скрыто от игроков')},h('span',{html:on?EYE:EYE_OFF}),short?null:(on?'видно':(why||'скрыто'))));
   return el;
 }
-const visBadge=(fn,o,roomO)=>fillVis(h('span',{class:'vis'}),fn,o,roomO);
+const visBadge=(on,why)=>fillVis(h('span',{class:'vis'}),on,why);
+const tokWhy=d=>shown(d)&&!roomOpen(cellRoom(d.x,d.z))?'комната скрыта':null;
 
 function applyFog(){
   const vis=shownRooms(); let k=0;
@@ -774,9 +937,38 @@ const HERO_COLORS=['#e3a04b','#5cbab4','#9b8ce0','#7fbf6a','#e07fb0','#d9d26a'];
 const tokenRoot=new THREE.Group(); scene.add(tokenRoot);
 const tagLayer=$('labels');
 const hitMat=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
+const MARK_COLORS=['#e8643c','#5cbab4','#9b8ce0','#7fbf6a','#f2d16b','#e07fb0','#ebe3d0'];
+const MARK_SHAPES=[['circle','Круг'],['square','Квадрат'],['cone','Конус'],['line','Линия']];
+function markGeo(d){
+  const s=Math.max(1,d.size||2); let geo;
+  if(d.shape==='square')geo=new THREE.PlaneGeometry(s,s);
+  else if(d.shape==='cone'){const a=2*Math.atan(.5);geo=new THREE.CircleGeometry(s,20,-a/2,a)}
+  else if(d.shape==='line'){geo=new THREE.PlaneGeometry(s,1);geo.translate(s/2,0,0)}
+  else geo=new THREE.CircleGeometry(s,56);
+  geo.rotateX(-Math.PI/2); return geo;
+}
+/* метка-маячок: плоская область на полу (круг, квадрат, конус, линия) с флажком в центре */
+function buildMark(t){
+  const d=t.data, sig=[d.shape,d.size,d.color].join('|');
+  if(t.markSig!==sig){
+    t.markSig=sig; if(t.area)t.grp.remove(t.area);
+    const c=new THREE.Color(d.color), geo=markGeo(d), a=new THREE.Group();
+    const fill=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.2,side:THREE.DoubleSide,depthWrite:false}));
+    const edge=new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:c,transparent:true,opacity:.95}));
+    fill.raycast=edge.raycast=()=>{};   /* область не перехватывает клики: под ней можно брать фишки и крутить камеру */
+    a.add(fill,edge); a.position.y=.05; t.grp.add(a); t.area=a; t.fill=fill;
+    t.base.forEach(o=>o.material.color.copy(c)); t.tag.style.setProperty('--c',d.color);
+  }
+  t.area.rotation.y=(d.rot||0)*Math.PI/180;
+}
 function makeToken(id,d){
   const grp=new THREE.Group(); const c=new THREE.Color(d.color); let spin=null;
-  if(d.kind==='object'){
+  if(d.kind==='mark'){
+    const m=new THREE.MeshBasicMaterial({color:c});
+    add(new THREE.SphereGeometry(.12,12,8),m,0,.55,0,grp);
+    add(new THREE.CylinderGeometry(.02,.02,.5,6),m,0,.27,0,grp);
+    add(new THREE.CylinderGeometry(.3,.3,.8,10),hitMat,0,.4,0,grp);
+  }else if(d.kind==='object'){
     const m=new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.9,roughness:.3});
     spin=add(new THREE.OctahedronGeometry(.17),m,0,1.25,0,grp);
     add(new THREE.CylinderGeometry(.012,.012,1.0,6),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.45}),0,.62,0,grp);
@@ -794,50 +986,68 @@ function makeToken(id,d){
   const base=grp.children.filter(o=>o.material!==hitMat);
   grp.position.set(d.x,0,d.z); tokenRoot.add(grp);
   const tn=h('span',{class:'tn',text:d.name}), vis=h('span',{class:'vis'});
-  const tag=h('div',{class:'tag'+(d.kind==='object'?' obj':'')},tn,vis); tag.style.setProperty('--c',d.color);
+  const tag=h('div',{class:'tag'+(d.kind==='object'?' obj':d.kind==='mark'?' mark':'')},tn,vis); tag.style.setProperty('--c',d.color);
   tagLayer.appendChild(tag);
   return {id,data:d,grp,tag,tn,vis,spin,base,modelId:null,modelObj:null,target:new THREE.Vector3(d.x,0,d.z)};
 }
+function dress(t){if(t.data.kind==='mark')buildMark(t);else{applyModel(t);tuneModel(t)}}
 function upsertToken(id,d){
   let t=S.tokens.get(id);
   if(!t){t=makeToken(id,d);S.tokens.set(id,t)}
   else{t.data=d; if(!drag||drag.tok!==t)t.target.set(d.x,0,d.z)}
-  applyModel(t);
+  dress(t);
   return t;
 }
 function removeToken(id){const t=S.tokens.get(id);if(!t)return;tokenRoot.remove(t.grp);t.tag.remove();S.tokens.delete(id);UI.openTok.delete(id)}
 function clearTokens(){[...S.tokens.keys()].forEach(removeToken)}
-function patchToken(id,patch){const t=S.tokens.get(id);if(!t)return;t.data={...t.data,...patch};applyModel(t);t.target.set(t.data.x,0,t.data.z);refreshAll();changed()}
-const canMove=t=>isDM()||(S.role==='player'&&t.data.mine&&t.data.control);
+function patchToken(id,patch){
+  const t=S.tokens.get(id);if(!t)return;const was=t.data;
+  t.data={...t.data,...patch};dress(t);t.target.set(t.data.x,0,t.data.z);
+  if(was.kind==='monster'&&was.hp>0&&t.data.hp<=0)cbDown(t);
+  refreshAll();changed();
+}
+const canMove=t=>isDM();
 
-/* ---------- Сеть: прямая связь браузеров через PeerJS ---------- */
-const PREFIX='kuk-dnd-';   /* код сессии не привязан к карте: карту можно менять на ходу */
-const PeerCtor=()=>window.Peer||(window.peerjs&&window.peerjs.Peer)||null;
-let peer=null, hostConn=null, conns=new Set(), code=null, lastFocusAt=null, retryT=null;
+/* ---------- Экран для игроков: второе окно этого же браузера. Ни серверов, ни интернета ---------- */
+const chan=('BroadcastChannel' in window)?new BroadcastChannel('dnd-screen:'+ADV.id):null;
+const post=m=>{if(chan)try{chan.postMessage(m)}catch(e){}};
+let screenSeen=0, scrWas=false, lastFocusAt=null, gotState=false, camGoal=null, camSent='', camAt=0;
+const screenOn=()=>Date.now()-screenSeen<6000;
 function setStatus(kind,text){
   const el=$('status'); el.className='status '+kind; el.querySelector('span').textContent=text;
   const ss=$('scrStatus'); ss.textContent=text; ss.className='scr-status '+kind;
 }
 function fullState(){const tokens={};S.tokens.forEach(t=>tokens[t.id]=t.data);
-  return {roomVis:S.roomVis,focus:S.focus,tokens,players:S.players,log:S.log,edits:S.edits}}
-function viewFor(pid,screen){
+  return {roomVis:S.roomVis,focus:S.focus,tokens,log:S.log,edits:S.edits,show:S.show,cb:S.cb}}
+/* карточка на экране игроков: описание комнаты или объекта */
+function showCard(){
+  const s=S.show; if(!s)return null;
+  if(s.k==='room'){const r=ROOMS.find(q=>q.n===s.n); if(!r||!roomOpen(r.n))return null;
+    return {title:r.n+'. '+r.name,text:roomText(r,'read'),change:roomText(r,'change')}}
+  const t=S.tokens.get(s.id); if(!t||!tokenOpen(t.data))return null;
+  return {title:t.data.name,text:t.data.text||'',change:''};
+}
+/* то, что уходит на экран игроков: только показанное */
+function viewState(){
   const tokens={};
-  S.tokens.forEach(t=>{const d=t.data; if(!tokenOpenFor(d,pid))return;
-    const o={name:d.name,kind:d.kind,color:d.color,x:d.x,z:d.z}; if(d.model)o.model=d.model;
-    if(d.kind==='hero'){o.mine=!!pid&&d.owner===pid;o.control=!!d.control}
+  S.tokens.forEach(t=>{const d=t.data; if(!tokenOpen(d))return;
+    const o={name:d.name,kind:d.kind,color:d.color,x:d.x,z:d.z};
+    if(d.model){o.model=d.model;o.mScale=d.mScale||1;o.mRot=d.mRot||0}
     if(d.kind==='object')o.text=d.text||'';
+    if(d.kind==='mark'){o.shape=d.shape;o.size=d.size;o.rot=d.rot||0}
     tokens[t.id]=o});
   const edits={}; Object.entries(S.edits).forEach(([n,e])=>{const o={};if(e.read!=null)o.read=e.read;if(e.change!=null)o.change=e.change;edits[n]=o});
-  return {adv:ADV.id,map:MAP.id,modelCfg,revealed:ROOMS.map(r=>r.n).filter(n=>roomOpenFor(n,pid)),focus:S.focus,tokens,edits,
-    log:S.log.filter(e=>seesVis(e,pid)).slice(0,screen?1:80).map(e=>({id:e.id,text:e.text,at:e.at}))};
+  const last=S.log.find(e=>shown(e)&&!e.auto);
+  return {adv:ADV.id,map:MAP.id,revealed:ROOMS.map(r=>r.n).filter(roomOpen),focus:S.focus,follow:UI.follow,tokens,edits,
+    log:last?[{id:last.id,text:last.text,at:last.at}]:[],card:showCard(),cb:cbView(true)};
 }
-/* Партия общая для всех карт приключения: герои (с привязкой к игрокам), список игроков и журнал.
-   Монстры, объекты, видимость комнат и правки текстов хранятся отдельно у каждой карты. */
+/* Партия общая для всех карт приключения: герои, их очередь в «игре» и журнал.
+   Монстры, объекты, метки, бой, видимость комнат и правки текстов хранятся отдельно у каждой карты. */
 function persist(){
   if(!isDM())return;
   LS(KEY('state3'),JSON.stringify(fullState()));
   const heroes={}; S.tokens.forEach(t=>{if(t.data.kind==='hero')heroes[t.id]=t.data});
-  LS(AK('party'),JSON.stringify({heroes,players:S.players,log:S.log}));
+  LS(AK('party'),JSON.stringify({heroes,log:S.log,game:S.cb.game}));
   LS(AK('touched'),String(Date.now()));
 }
 /* Сохранение из файла save.js подхватывается, если оно новее того, что лежит в браузере */
@@ -854,7 +1064,7 @@ function importSave(){
 function exportSave(){
   persist();
   const maps={}; ADV.maps.forEach(m=>{const st=LSJ(AK(m.id+':state3'),null);if(st)maps[m.id]=st});
-  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),presets,modelCfg,maps};
+  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),presets,maps};
   LS(AK('touched'),String(at));
   const d=new Date(at), stamp=d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
   const out='/* Сохранение приключения «'+ADV.title+'» от '+stamp+'. Положи этот файл в папку adventures/'+ADV.id+' вместо старого. */\nwindow.SAVE = '+JSON.stringify(sv)+';\n';
@@ -864,155 +1074,285 @@ function exportSave(){
 }
 function adoptParty(){
   const P=LSJ(AK('party'),null); if(!P)return;
-  S.players=P.players||{}; S.log=P.log||[];
+  S.log=(P.log||[]).map(normVis);
+  if(P.game)S.cb.game={...newCb().game,...P.game,run:true};
   const H=P.heroes||{};
   [...S.tokens.values()].forEach(t=>{if(t.data.kind==='hero'&&!H[t.id])removeToken(t.id)});
   Object.entries(H).forEach(([id,d])=>{
-    const t=S.tokens.get(id);
+    d=legacyTune(normVis(d)); const t=S.tokens.get(id);
     if(t)upsertToken(id,{...d,x:t.data.x,z:t.data.z});            /* на этой карте герой уже стоял: место сохраняем */
     else{const [x,z]=spawnCell(0);upsertToken(id,{...d,x,z})}      /* новая для героя карта: ставим у входа */
   });
 }
 function switchMap(id){
-  persist();
-  conns.forEach(c=>{if(c.open)c.send({type:'goto',adv:ADV.id,map:id})});
-  setTimeout(()=>{location.href=mapUrl(id)},300);
+  persist(); post({type:'goto',adv:ADV.id,map:id});
+  setTimeout(()=>{location.href=mapUrl(id)},250);
 }
 function followMap(id,adv){
   adv=adv||ADV.id; if(!id||(id===MAP.id&&adv===ADV.id))return false;
   const a=(CAT.adventures||[]).find(x=>x.id===adv); if(!a||!a.maps.some(m=>m.id===id))return false;
-  location.href=mapUrl(id,adv)+location.hash; return true;
+  location.href=mapUrl(id,adv)+'&screen=1'; return true;
 }
-function broadcast(){conns.forEach(c=>{if(c.open)c.send({type:'state',state:viewFor(c.pid||null,!!(c.metadata&&c.metadata.role==='screen'))})})}
-function changed(){persist();if(S.role==='dm')broadcast()}
-function defaultRoomVis(){const o={};ROOMS.forEach((r,i)=>o[r.n]={vis:i===0?'all':'none',except:[]});return o}
+function broadcast(){if(isDM())post({type:'state',state:viewState()})}
+function changed(){persist();broadcast()}
+function defaultRoomVis(){const o={};ROOMS.forEach((r,i)=>o[r.n]={vis:i===0?'all':'none'});return o}
 function loadFull(st){
-  S.roomVis=Object.assign(defaultRoomVis(),st.roomVis||{});
-  S.focus=st.focus||null; S.players=st.players||{}; S.log=st.log||[]; S.edits=st.edits||{};
-  clearTokens(); Object.entries(st.tokens||{}).forEach(([id,d])=>{if(d&&typeof d.x==='number')upsertToken(id,d)});
+  S.roomVis=Object.assign(defaultRoomVis(),st.roomVis||{}); Object.values(S.roomVis).forEach(normVis);
+  S.focus=st.focus||null; S.log=(st.log||[]).map(normVis); S.edits=st.edits||{}; S.show=st.show||null;
+  const cb=newCb(), o=st.cb||{};
+  S.cb={mode:o.mode==='fight'&&o.fight&&o.fight.run?'fight':'game',t:o.t||null,game:{...cb.game,...(o.game||{}),run:true},fight:{...cb.fight,...(o.fight||{})}};
+  if(S.cb.t&&S.cb.t.endsAt){S.cb.t.left=Math.max(0,S.cb.t.endsAt-Date.now());S.cb.t.endsAt=null}   /* после перезагрузки таймер стоит на паузе */
+  clearTokens(); Object.entries(st.tokens||{}).forEach(([id,d])=>{if(d&&typeof d.x==='number')upsertToken(id,legacyTune(normVis(d)))});
 }
 function loadLocal(){
   const st=LSJ(KEY('state3'),null);
   if(st){loadFull(st);adoptParty();return}
-  S.roomVis=defaultRoomVis(); S.log=[]; S.edits={};
-  (MAP.tokens||[]).forEach(d=>{if(d&&typeof d.x==='number')upsertToken('t'+uid(),{vis:'all',except:[],...d})});
-  (MAP.objects||[]).forEach(o=>upsertToken('t'+uid(),{name:o.name,kind:'object',color:OBJ_COLOR,x:o.at[0],z:o.at[1],vis:o.vis||'all',except:[],text:o.text||'',note:o.dm||'',model:o.model||null}));
+  S.roomVis=defaultRoomVis(); S.log=[]; S.edits={}; S.show=null; S.cb=newCb();
+  (MAP.tokens||[]).forEach(d=>{if(d&&typeof d.x==='number')upsertToken('t'+uid(),normVis({vis:'all',...d}))});
+  (MAP.objects||[]).forEach(o=>upsertToken('t'+uid(),{name:o.name,kind:'object',color:OBJ_COLOR,x:o.at[0],z:o.at[1],vis:o.vis==='none'?'none':'all',text:o.text||'',note:o.dm||'',model:o.model||null}));
   adoptParty();
 }
+/* окно игроков получает от мастера готовую картинку мира */
 function applyRemote(st){
   if(followMap(st.map,st.adv))return;
+  gotState=true; setStatus('live','Экран для игроков');
   S.revealed=Array.isArray(st.revealed)?st.revealed:[];
-  S.edits=st.edits||{}; S.log=st.log||[];
-  if(st.modelCfg){modelCfg=st.modelCfg;S.tokens.forEach(tuneModel)}
+  S.edits=st.edits||{}; S.log=st.log||[]; S.card=st.card||null; S.pub=st.cb||null;
+  UI.follow=!!st.follow; if(!UI.follow)camGoal=null;
   const seen=new Set(Object.keys(st.tokens||{}));
   [...S.tokens.keys()].forEach(id=>{if(!seen.has(id))removeToken(id)});
   Object.entries(st.tokens||{}).forEach(([id,d])=>{if(d&&typeof d.x==='number')upsertToken(id,d)});
   const f=st.focus||null;
-  if(f&&((S.role==='player'&&lastFocusAt!==null&&f.at!==lastFocusAt)||(S.role==='screen'&&f.at!==lastFocusAt)))goFocus(f.n);
+  if(f&&f.at!==lastFocusAt&&!UI.follow)goFocus(f);
   lastFocusAt=f?f.at:0; S.focus=f;
   if(S.current&&!S.revealed.includes(S.current.n))S.current=null;
   refreshAll();
 }
-const newCode=()=>{const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=a[Math.floor(Math.random()*a.length)];return s};
-function shareLink(kind){return location.protocol.startsWith('http')?location.href.split('#')[0]+'#'+(kind==='screen'?'screen-':'')+code:null}
-const onlinePids=()=>new Set([...conns].filter(c=>c.open&&c.pid).map(c=>c.pid));
-function liveStatus(){
-  if(S.role==='dm'){
-    const open=[...conns].filter(c=>c.open), scr=open.filter(c=>c.metadata&&c.metadata.role==='screen').length;
-    setStatus('live',`Сессия идёт · игроков: ${open.length-scr} · экранов: ${scr}`);
-  }else if(S.role==='player')setStatus('live',`Ты в сессии ${code}`);
-  else if(S.role==='screen')setStatus('live',`Общий экран · сессия ${code}`);
+function openScreen(){
+  const w=window.open(mapUrl(MAP.id)+'&screen=1','dnd-screen','popup=yes,width=1280,height=720');
+  if(!w)setStatus('warn','Браузер не дал открыть окно. Разреши всплывающие окна для этого сайта и нажми ещё раз.');
 }
-function soloStatus(){setStatus('','Один экран. Создай сессию, чтобы подключить игроков.')}
-
-/* вписанное заранее имя («@ксюша») превращается в игрока, когда он подключился */
-function adoptName(pid,name){
-  const key=('@'+name).toLowerCase(), is=k=>k.toLowerCase()===key, fix=o=>{if(o&&o.except&&o.except.some(is))o.except=[...new Set(o.except.map(k=>is(k)?pid:k))]};
-  Object.values(S.roomVis).forEach(fix); S.log.forEach(fix);
-  S.tokens.forEach(t=>{if((t.data.except||[]).some(is)){const d={...t.data};fix(d);t.data=d}});
+function sendCam(force){
+  const p=camera.position, t=controls.target, r=n=>Math.round(n*100)/100, key=[r(p.x),r(p.y),r(p.z),r(t.x),r(t.y),r(t.z)].join();
+  if(!force&&key===camSent)return; camSent=key; post({type:'cam',p:[p.x,p.y,p.z],t:[t.x,t.y,t.z]});
 }
-function onPlayerMsg(c,m){
-  if(!m||(c.metadata&&c.metadata.role==='screen'))return;
-  if(m.type==='hello'){
-    c.pid=String(m.pid||'').slice(0,40); if(!c.pid)return;
-    const name=String(m.name||'').trim().slice(0,24)||'Игрок '+(Object.keys(S.players).length+(S.players[c.pid]?0:1));
-    S.players[c.pid]={name}; adoptName(c.pid,name);
-    liveStatus(); refreshAll(); changed(); return;
+function checkScreen(){const on=screenOn();if(on!==scrWas){scrWas=on;renderSession()}}
+if(chan)chan.onmessage=ev=>{
+  const m=ev.data; if(!m)return;
+  if(isDM()){
+    if(m.type==='hello'){screenSeen=Date.now();broadcast();if(UI.follow)sendCam(true);checkScreen()}
+    else if(m.type==='ping'){screenSeen=Date.now();checkScreen()}
+    else if(m.type==='bye'){screenSeen=0;checkScreen()}
+  }else{
+    if(m.type==='goto')followMap(m.map,m.adv);
+    else if(m.type==='state')applyRemote(m.state);
+    else if(m.type==='cam'){if(UI.follow){camGoal={t:new THREE.Vector3(...m.t),p:new THREE.Vector3(...m.p)};fly=null}}
+    else if(m.type==='beep')beep();
   }
-  const pid=c.pid; if(!pid)return;
-  if(m.type==='move'){
-    const t=S.tokens.get(m.tokenId);
-    if(!t||t.data.owner!==pid||!t.data.control)return;
-    const cx=Math.floor(m.x),cy=Math.floor(m.z); if(!isOpen(cx,cy))return;
-    patchToken(t.id,{x:cx+.5,z:cy+.5});
-  }
+};
+function screenBoot(){
+  setStatus('warn','Жду мастера… Окно мастера должно быть открыто в этом же браузере.');
+  post({type:'hello'});
+  setInterval(()=>post({type:gotState?'ping':'hello'}),2000);
+  addEventListener('pagehide',()=>post({type:'bye'}));
 }
-function addLog(text,v){S.log=[{id:uid(),text,at:Date.now(),vis:v.vis,except:[...(v.except||[])]},...S.log].slice(0,200);refreshAll();changed()}
+function addLog(text,vis){S.log=[{id:uid(),text,at:Date.now(),vis:vis==='none'?'none':'all'},...S.log].slice(0,200);refreshAll();changed()}
+let actx=null;
+function beep(){
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const t=actx.currentTime;
+    [0,.22,.44].forEach(d=>{const o=actx.createOscillator(),gn=actx.createGain();o.frequency.value=880;o.connect(gn);gn.connect(actx.destination);
+      gn.gain.setValueAtTime(.0001,t+d);gn.gain.exponentialRampToValueAtTime(.25,t+d+.02);gn.gain.exponentialRampToValueAtTime(.0001,t+d+.18);o.start(t+d);o.stop(t+d+.2)});
+  }catch(e){}
+}
 
-function leave(){
-  clearTimeout(retryT); conns.forEach(c=>{try{c.close()}catch(e){}}); conns.clear();
-  if(peer){try{peer.destroy()}catch(e){}} peer=null; hostConn=null;
-  const wasRemote=remote();
-  S.role='solo'; S.view='dm'; UI.pop=null;
-  if(wasRemote){clearTokens();S.revealed=[];S.focus=null;loadLocal()}
-  refreshAll(); soloStatus();
+/* ---------- ИГРА / БОЙ: очередь ходов, раунды, таймер ---------- */
+const CB=()=>S.cb[S.cb.mode];
+const fmt=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const cbTok=e=>S.tokens.get(e.id);
+const cbDownE=e=>{const t=cbTok(e);return !t||(t.data.kind==='monster'&&t.data.hp<=0)};
+const cbAlive=e=>e.in&&!cbDownE(e);
+const cbName=id=>{const t=S.tokens.get(id);return t?t.data.name:'?'};
+const cbVis=id=>{const t=S.tokens.get(id);return t&&tokenOpen(t.data)?'all':'none'};
+function logLine(text,vis){S.log=[{id:uid(),text,at:Date.now(),vis:vis||'all',auto:true},...S.log].slice(0,200)}
+function cbTimed(M,id){const t=S.tokens.get(id);return !!t&&(M.tFor==='all'||(M.tFor==='hero'&&t.data.kind==='hero'))}
+function cbStartTurn(){
+  const M=CB(); M.turnAt=Date.now(); UI.cbShift=0;
+  S.cb.t=M.run&&M.cur&&cbTimed(M,M.cur)?{total:M.sec*1000,endsAt:Date.now()+M.sec*1000,left:null,fired:false}:null;
 }
-function hostSession(reuse){
-  if(!PeerCtor()){setStatus('warn','Не загрузилась библиотека связи. Проверь интернет.');return}
-  leave();
-  code=(reuse&&LS('dnd-session-code'))||newCode(); LS('dnd-session-code',code); LS('dnd-session-hosting','1');
-  S.role='dm'; S.view='dm'; refreshAll(); setStatus('','Создаю сессию…');
-  peer=new (PeerCtor())(PREFIX+code);
-  peer.on('open',liveStatus);
-  peer.on('connection',c=>{
-    c.on('open',()=>{conns.add(c);c.send({type:'state',state:viewFor(null,!!(c.metadata&&c.metadata.role==='screen'))});liveStatus()});
-    c.on('data',m=>onPlayerMsg(c,m));
-    c.on('close',()=>{conns.delete(c);liveStatus();renderTokens()});
+/* добавить в очередь тех, кого в ней ещё нет: героев всегда, монстров — показанных игрокам или всех */
+function cbFill(M,kinds,all){
+  S.tokens.forEach(t=>{const d=t.data; if(M.list.some(e=>e.id===t.id))return;
+    if(d.kind==='hero'||(kinds==='all'&&d.kind==='monster'&&d.hp>0&&(all||tokenOpen(d))))M.list.push({id:t.id,ini:0,in:true})});
+}
+function cbSync(){
+  ['game','fight'].forEach(k=>{const M=S.cb[k]; M.list=M.list.filter(e=>S.tokens.has(e.id))});
+  cbFill(S.cb.game,'hero');
+  const M=CB();
+  if(M.run&&!M.list.some(e=>e.id===M.cur&&e.in)){const f=M.list.find(cbAlive), id=f?f.id:null; if(id!==M.cur){M.cur=id;cbStartTurn()}}
+}
+function cbNext(dir){
+  const M=CB(), L=M.list, n=L.length; if(!M.run||!n)return;
+  let i=L.findIndex(e=>e.id===M.cur); const from=i, T=S.cb.t;
+  if(M.log&&M.cur&&T&&!T.fired&&dir!==-1)logLine(cbName(M.cur)+': ход занял '+fmt(Date.now()-M.turnAt),cbVis(M.cur));
+  for(let k=0;k<n;k++){
+    i+=dir===-1?-1:1;
+    if(i>=n){i=0;M.round++;if(M.log)logLine((S.cb.mode==='fight'?'Бой':'Игра')+': раунд '+M.round)}
+    if(i<0){if(M.round<=1){i=from;break}i=n-1;M.round--}
+    if(cbAlive(L[i]))break;
+  }
+  M.cur=L[i]&&cbAlive(L[i])?L[i].id:((L.find(cbAlive)||{}).id||null);
+  cbStartTurn(); refreshAll(); changed();
+}
+function cbTimeout(){
+  const M=CB(), T=S.cb.t; if(!T||T.fired||!T.endsAt||Date.now()<T.endsAt)return;
+  T.fired=true; beep(); post({type:'beep'});
+  if(M.log)logLine(cbName(M.cur)+': время вышло',cbVis(M.cur));
+  if(M.tEnd==='pass')cbNext(); else{refreshAll();changed()}
+}
+function cbPause(){
+  const T=S.cb.t; if(!T)return;
+  if(T.endsAt){T.left=Math.max(0,T.endsAt-Date.now());T.endsAt=null}else{T.endsAt=Date.now()+(T.left||0);T.left=null}
+  refreshAll(); changed();
+}
+function cbStartFight(){
+  const F=S.cb.fight, first=F.list.find(cbAlive); if(!first)return;
+  S.cb.mode='fight'; F.run=true; F.round=1; F.began=Date.now(); F.cur=first.id;
+  if(F.log)logLine('⚔ Бой начался. Порядок: '+F.list.filter(e=>cbAlive(e)&&cbVis(e.id)==='all').map(e=>cbName(e.id)).join(', '));
+  cbStartTurn(); UI.setup=null; refreshAll(); changed();
+}
+function cbEndFight(){
+  const F=S.cb.fight; if(!F.run)return;
+  if(F.log)logLine('Бой окончен. Раундов: '+F.round+', длился '+fmt(Date.now()-(F.began||Date.now())));
+  F.run=false; F.cur=null; S.cb.mode='game'; cbStartTurn(); UI.setup=null; refreshAll(); changed();
+}
+function cbDown(t){
+  const F=S.cb.fight; if(S.cb.mode!=='fight'||!F.run||!F.list.some(e=>e.id===t.id&&e.in))return;
+  if(F.log)logLine(t.data.name+' повержен',cbVis(t.id));
+  if(F.cur===t.id)setTimeout(()=>cbNext(),0);
+}
+/* картинка очереди: у мастера полная, для игроков без хитов, инициативы и имён скрытых участников */
+function cbView(pub){
+  const M=CB(), cells=[]; let act=-1;
+  M.list.forEach(e=>{
+    if(!e.in)return; const t=cbTok(e); if(!t)return; const d=t.data, hid=!tokenOpen(d), down=cbDownE(e);
+    if(e.id===M.cur)act=cells.length;
+    cells.push(pub&&hid?{name:'Некто',color:'#6f7a78',kind:'unknown',down}
+      :{id:e.id,name:d.name,color:d.color,kind:d.kind,down,...(pub?{}:{ini:e.ini,hp:d.hp,hpMax:d.hpMax,hid})});
   });
-  peer.on('error',err=>{
-    if(err.type==='unavailable-id'){
-      setStatus('warn','Код '+code+' ещё занят прошлой вкладкой, пробую снова…');
-      setTimeout(()=>{if(S.role==='dm')hostSession(true)},2000);return;
-    }
-    if(err.type!=='peer-unavailable')setStatus('warn','Сбой связи ('+err.type+'). Сессия попробует восстановиться.');
+  const T=S.cb.t;
+  return {mode:S.cb.mode,run:M.run,round:M.round,act,cells,t:T&&M.run&&act>=0?{total:T.total,endsAt:T.endsAt,left:T.left}:null};
+}
+const cbEl=$('cb'), cbMain=h('div',{class:'cbmain'}), cbSetup=h('div',{class:'setup',hidden:true}); cbEl.append(cbMain,cbSetup);
+let dragRow=null;
+function renderCb(){
+  if(isDM())cbSync();
+  const tv=remote(), V=isDM()?cbView(S.view!=='dm'):S.pub;
+  const off=!V||(tv&&!V.cells.length);
+  cbEl.hidden=off; document.body.classList.toggle('has-cb',!off);
+  if(off)return;
+  const fight=V.mode==='fight', n=V.cells.length, cur=V.act>=0?V.cells[V.act]:null, T=V.t;
+  cbEl.className=(tv?'tv ':'')+(fight?'fight':'game');
+  const cell=(c,i,cls)=>{
+    const sub=c.down?h('span',{text:'повержен'}):c.kind==='hero'?h('span',{text:'герой'}):c.kind==='unknown'?h('span',{text:'скрыт'})
+      :c.hp!=null?[h('span',{text:c.hp+'/'+c.hpMax}),h('span',{class:'hpb'},h('i',{style:'width:'+Math.round(c.hp/Math.max(1,c.hpMax)*100)+'%'}))]:h('span',{text:'монстр'});
+    const el=h('div',{class:'cell '+cls+(c.down?' out':'')+(c.hid?' hid':'')+(c.id&&!tv?' go':''),title:c.hid?'Игроки его не видят: на их экране он «Некто»':null,
+        onclick:c.id&&!tv?()=>flyToToken(c.id):null},
+      fight&&c.ini!=null&&h('span',{class:'ini',text:'ин. '+c.ini}),
+      h('div',{class:'top'},h('span',{class:'n',text:i+1}),h('span',{class:'nm',text:c.name+(c.hid?' · скрыт':'')})),h('div',{class:'sb'},sub));
+    el.style.setProperty('--c',c.color); return el;
+  };
+  const track=h('div',{class:'track'}), divd=r=>h('div',{class:'div'},h('span',{text:'↻'}),'РАУНД '+r);
+  if(n){
+    if(V.round>1){V.cells.forEach((c,i)=>track.append(cell(c,i,'done')));track.append(divd(V.round))}
+    V.cells.forEach((c,i)=>track.append(cell(c,i,V.act<0?'':i<V.act?'done':i===V.act?'act':'')));
+    track.append(divd(V.round+1));
+    V.cells.forEach((c,i)=>track.append(cell(c,i,'next')));
+  }
+  const strip=h('div',{class:'strip'},
+    !n&&h('p',{class:'hint',text:'Очередь ходов пуста. Добавь героев в блоке «Фишки и объекты»: они встанут сюда сами.'}),
+    !tv&&n>0&&h('button',{class:'arr l','aria-label':'Прокрутить ленту назад',onclick:()=>{UI.cbShift--;renderCb()}},h('b',{text:'◀'})),
+    !tv&&n>0&&h('button',{class:'arr r','aria-label':'Прокрутить ленту вперёд',onclick:()=>{UI.cbShift++;renderCb()}},h('b',{text:'▶'})),track);
+  const tlabel=()=>h('span',{class:'tlabel'},'Ход · ',h('b',{text:cur?cur.name:''}));
+  const clock=()=>[h('span',{class:'tdig',text:''}),h('span',{class:'tbar'},h('i'))];
+  const stack=h('div',{class:'cbstack'});
+  if(tv)stack.append(h('div',{class:'plate '+(fight?'fight':'')},fight?'БОЙ':'ИГРА',h('small',{text:'раунд '+V.round})));
+  else{
+    if(cur)stack.append(h('div',{class:'turn'},h('div',{class:'tleft'},tlabel(),T&&clock()),
+      h('div',{class:'tbtns'},h('button',{class:'go',text:'Завершить ход ▶',onclick:()=>cbNext()}),
+        h('div',{},h('button',{text:'↩ Назад',title:'Вернуть ход предыдущему',onclick:()=>cbNext(-1)}),
+          T&&h('button',{text:T.endsAt?'⏸ Пауза':'▶ Дальше',onclick:cbPause})))));
+    const G=S.cb.game, F=S.cb.fight;
+    stack.append(h('div',{class:'mode',role:'group','aria-label':'Режим'},
+      h('button',{class:(fight?'':'on')+(UI.setup==='game'?' open':''),title:'Очередь и таймер игры',onclick:()=>openSetup('game')},'ИГРА',!fight&&h('small',{text:'раунд '+G.round})),
+      h('button',{class:(fight?'on fight':'')+(UI.setup==='fight'?' open':''),title:'Очередь и таймер боя',onclick:()=>openSetup('fight')},'БОЙ',fight&&h('small',{text:'раунд '+F.round}))));
+  }
+  if(n&&V.act>=0)stack.append(h('div',{class:'ptr'}));
+  cbMain.innerHTML='';
+  if(tv&&T&&cur)cbMain.append(h('div',{class:'tvtimer'},tlabel(),clock()));
+  cbMain.append(stack,strip);
+  const a=track.querySelector('.act')||track.querySelector('.cell');
+  if(a)track.style.transform='translateX('+(strip.clientWidth/2-(a.offsetLeft+a.offsetWidth/2)-UI.cbShift*(a.offsetWidth+6))+'px)';
+  renderSetup(); cbTick();
+}
+function openSetup(k){
+  UI.setup=UI.setup===k?null:k;
+  if(UI.setup==='fight'&&!S.cb.fight.run)cbFill(S.cb.fight,'all',false);
+  renderCb();
+}
+function renderSetup(){
+  const el=cbSetup, k=UI.setup;
+  if(!k||!isDM()){el.hidden=true;el.innerHTML='';return}
+  const fo=document.activeElement; if(fo&&fo.type==='number'&&el.contains(fo))return;   /* не перерисовывать, пока вписывают инициативу */
+  const M=S.cb[k], fight=k==='fight', active=S.cb.mode===k, upd=()=>{refreshAll();changed()};
+  const retime=()=>{if(active)cbStartTurn();upd()};
+  el.hidden=false; el.innerHTML=''; el.className='setup '+k;
+  const move=(i,j)=>{if(j<0||j>=M.list.length||i===j)return;const [e]=M.list.splice(i,1);M.list.splice(j,0,e);upd()};
+  const rows=M.list.map((e,i)=>{
+    const t=cbTok(e); if(!t)return null; const d=t.data, down=cbDownE(e);
+    const row=h('div',{class:'prow'+(e.in&&!down?'':' off')+(M.run&&active&&e.id===M.cur?' cur':''),draggable:'true'},
+      h('span',{class:'h',text:'⋮⋮',title:'Перетащи, чтобы поменять очередь'}),h('span',{class:'o',text:i+1}),h('span',{class:'d'}),
+      h('span',{class:'nm',text:d.name+(tokenOpen(d)?'':' · скрыт')}),h('span',{class:'k',text:d.kind==='hero'?'герой':down?'повержен':'монстр'}),
+      h('button',{class:'mv',text:'▲','aria-label':'Выше: '+d.name,onclick:()=>move(i,i-1)}),h('button',{class:'mv',text:'▼','aria-label':'Ниже: '+d.name,onclick:()=>move(i,i+1)}),
+      fight&&h('input',{class:'iv',type:'number',value:e.ini||0,'aria-label':'Инициатива: '+d.name,onchange:ev=>{e.ini=+ev.target.value||0;changed()}}),
+      h('input',{type:'checkbox',checked:e.in,'aria-label':(fight?'В бою: ':'В очереди: ')+d.name,onchange:ev=>{e.in=ev.target.checked;upd()}}));
+    row.style.setProperty('--c',d.color);
+    row.ondragstart=ev=>{dragRow=i;ev.dataTransfer.effectAllowed='move';try{ev.dataTransfer.setData('text/plain',String(i))}catch(x){}};
+    row.ondragover=ev=>{ev.preventDefault();row.classList.add('over')}; row.ondragleave=()=>row.classList.remove('over');
+    row.ondrop=ev=>{ev.preventDefault();const f=dragRow;dragRow=null;if(f!=null)move(f,i)};
+    return row;
   });
-  peer.on('disconnected',()=>{try{peer.reconnect()}catch(e){}});
+  const step=dv=>{M.sec=Math.max(15,Math.min(600,M.sec+dv));retime()};
+  const left=h('div',{},h('div',{class:'sec'},
+    h('div',{class:'lbl heads'},h('span',{text:'Участник'}),h('span',{text:fight?'инициатива · в бою':'в очереди'})),
+    rows,!M.list.length&&h('p',{class:'note',text:fight?'На карте пока некому драться.':'Героев пока нет.'}),
+    fight&&h('div',{class:'chips'},
+      h('button',{class:'chip',text:'🎲 к20 за монстров',onclick:()=>{M.list.forEach(e=>{const t=cbTok(e);if(t&&t.data.kind==='monster')e.ini=1+Math.floor(Math.random()*20)});upd()}}),
+      h('button',{class:'chip',text:'По инициативе ↓',onclick:()=>{const hero=e=>{const t=cbTok(e);return t&&t.data.kind==='hero'?1:0};M.list.sort((a,b)=>(b.ini||0)-(a.ini||0)||hero(b)-hero(a));upd()}}),
+      h('button',{class:'chip',text:'+ Все с карты',title:'Добавить и тех монстров, которых игроки пока не видят',onclick:()=>{cbFill(M,'all',true);upd()}}))));
+  const right=h('div',{},h('div',{class:'sec'},h('span',{class:'lbl',text:'Таймер хода'}),
+      h('div',{class:'line'},'Считать для',fight
+        ?seg([['hero','Героев'],['all','Всех'],['none','Никого']],M.tFor,v=>{M.tFor=v;retime()},'Для кого таймер','mini sea')
+        :seg([['none','Выключен'],['all','Включён']],M.tFor==='none'?'none':'all',v=>{M.tFor=v;retime()},'Таймер','mini sea')),
+      M.tFor!=='none'&&h('div',{class:'line'},'Время',h('span',{class:'num'},h('button',{text:'−','aria-label':'Меньше времени',onclick:()=>step(-15)}),h('b',{text:fmt(M.sec*1000)}),h('button',{text:'+','aria-label':'Больше времени',onclick:()=>step(15)}))),
+      M.tFor!=='none'&&h('div',{class:'line'},'Время вышло',seg([['signal','Сигнал'],['pass','Передать ход']],M.tEnd,v=>{M.tEnd=v;upd()},'Когда время вышло','mini sea'))),
+    h('div',{class:'sec'},h('label',{class:'check'},h('input',{type:'checkbox',checked:M.log,onchange:ev=>{M.log=ev.target.checked;changed()}}),
+      h('span',{text:fight?'Записывать в журнал: начало и конец боя, раунды, время ходов, павших':'Записывать в журнал раунды и время ходов'}))),
+    fight?(M.run?h('button',{class:'start calm',text:'ЗАКОНЧИТЬ БОЙ',onclick:cbEndFight})
+                :h('button',{class:'start',text:'⚔ НАЧАТЬ БОЙ',disabled:!M.list.some(cbAlive),onclick:cbStartFight}))
+         :(S.cb.fight.run?h('button',{class:'start calm',text:'ЗАКОНЧИТЬ БОЙ И ВЕРНУТЬСЯ В ИГРУ',onclick:cbEndFight})
+                :h('button',{class:'start calm',text:'НАЧАТЬ РАУНДЫ ЗАНОВО',onclick:()=>{M.round=1;M.cur=(M.list.find(cbAlive)||{}).id||null;cbStartTurn();upd()}})));
+  el.append(h('header',{},h('h3',{},fight?'Бой':'Игра',h('small',{text:'очередность и таймер'})),
+      h('button',{class:'icon',text:'×','aria-label':'Закрыть',style:'font-size:22px',onclick:()=>{UI.setup=null;renderCb()}})),
+    h('div',{class:'cols'},left,right));
 }
-function endHosting(){LS('dnd-session-hosting',null);leave()}
-function joinSession(raw,asScreen){
-  const c=(raw||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-  if(c.length<4){setStatus('warn','Введи код, который дал мастер.');return}
-  if(!PeerCtor()){setStatus('warn','Не загрузилась библиотека связи. Проверь интернет.');return}
-  if(LS('dnd-session-hosting')==='1'&&!location.hash)LS('dnd-session-hosting',null);
-  leave();
-  code=c; S.role=asScreen?'screen':'player'; S.view='players'; lastFocusAt=null;
-  clearTokens(); S.revealed=[]; S.focus=null; S.log=[]; S.edits={};
-  S.current=null; flyTo(HOME.target.clone(),HOME.pos.clone()); refreshAll();
-  setStatus('','Подключаюсь к сессии '+c+'…');
-  peer=new (PeerCtor())();
-  peer.on('open',dial);
-  peer.on('error',err=>{
-    if(err.type==='peer-unavailable'){setStatus('warn','Сессия '+code+' пока не найдена. Мастер должен держать карту открытой. Пробую снова…');retry()}
-    else setStatus('warn','Сбой связи ('+err.type+'). Пробую снова…');
-  });
-  peer.on('disconnected',()=>{try{peer.reconnect()}catch(e){}});
+function cbTick(){
+  if(isDM())cbTimeout();
+  const T=isDM()?S.cb.t:(S.pub&&S.pub.t), dg=cbEl.querySelector('.tdig'); if(!T||!dg)return;
+  const left=T.endsAt?T.endsAt-Date.now():(T.left||0);
+  dg.textContent=fmt(left); dg.classList.toggle('low',left<=10000); dg.classList.toggle('paused',!T.endsAt);
+  const bar=cbEl.querySelector('.tbar i'); if(bar)bar.style.width=Math.max(0,Math.min(100,left/T.total*100))+'%';
 }
-function sendHello(){if(S.role==='player'&&hostConn&&hostConn.open)hostConn.send({type:'hello',pid:ME.pid,name:ME.name})}
-function dial(){
-  if(!remote()||!peer||peer.destroyed)return;
-  if(hostConn&&!hostConn.open){try{hostConn.close()}catch(e){}}
-  const hc=hostConn=peer.connect(PREFIX+code,{reliable:true,serialization:'json',metadata:{role:S.role}});
-  /* мастер мог ещё не подняться (например, сразу после смены карты): пробуем снова, пока не ответит */
-  setTimeout(()=>{if(hostConn===hc&&!hc.open&&remote()){setStatus('warn','Жду мастера…');retry()}},4000);
-  hostConn.on('open',()=>{liveStatus();sendHello()});
-  hostConn.on('data',m=>{if(!m)return;if(m.type==='goto')followMap(m.map,m.adv);else if(m.type==='state')applyRemote(m.state)});
-  hostConn.on('close',()=>{if(remote()){setStatus('warn','Мастер отключился. Жду, когда вернётся…');retry()}});
-}
-function retry(){clearTimeout(retryT);retryT=setTimeout(dial,2500)}
-function toHost(msg){
-  if(!hostConn||!hostConn.open){setStatus('warn','Нет связи с мастером, действие не ушло.');return false}
-  hostConn.send(msg); return true;
-}
+setInterval(cbTick,250);
 
 /* ---------- Интерфейс ---------- */
 const labels=$('labels');
@@ -1035,68 +1375,33 @@ function guarded(panelId,fn){
 document.addEventListener('focusout',()=>setTimeout(()=>{const fns=[...pendingRender];pendingRender.clear();fns.forEach(f=>guarded(f.panel,f))},0));
 const panelFn=(panel,fn)=>{fn.panel=panel;return ()=>guarded(panel,fn)};
 
-/* единый переключатель видимости: скрыто / видно всем / всем, кроме… */
+/* единый переключатель видимости: скрыть от игроков или показать */
 function visControl(o,onChange,label){
-  const ex=o.except||[], cur=o.vis||'all', box=h('div',{class:'field'});
-  box.append(h('span',{class:'lbl',text:label||'Кто видит'}),
-    seg([['none','Никто'],['all','Все'],['except','Все, кроме…']],cur,v=>onChange({vis:v,except:ex}),label||'Кто видит','mini sea'));
-  if(cur==='except'){
-    const known=Object.keys(S.players);
-    const add=val=>{val=val.trim();if(!val)return;
-      const pid=known.find(p=>playerName(p).toLowerCase()===val.toLowerCase()), key=pid||'@'+val;
-      if(!ex.some(k=>k.toLowerCase()===key.toLowerCase()))onChange({vis:'except',except:[...ex,key]})};
-    const inp=h('input',{type:'text',placeholder:'Впиши имя игрока и нажми Enter',maxlength:'24','aria-label':'Кому не видно',
-      onkeydown:e=>{if(e.key==='Enter'){const v=e.target.value;e.target.value='';e.target.blur();add(v)}}});
-    box.append(h('span',{class:'lbl',text:'Кому не видно'}),
-      h('div',{class:'chips'},
-        ex.map(k=>h('button',{class:'chip no','aria-pressed':'true',title:'Убрать из списка',text:exName(k)+(k[0]==='@'?' (ещё не в игре)':'')+'  ×',onclick:()=>onChange({vis:'except',except:ex.filter(x=>x!==k)})})),
-        known.filter(p=>!ex.includes(p)).map(p=>h('button',{class:'chip',text:'+ '+playerName(p),onclick:()=>onChange({vis:'except',except:[...ex,p]})}))),
-      h('div',{class:'row'},inp));
-    if(!ex.length)box.append(h('p',{class:'note',text:'Список пуст: пока не видит никто, кроме тебя. Добавь игроков, от которых скрываешь.'}));
-  }
-  return box;
+  return h('div',{class:'field'},h('span',{class:'lbl',text:label||'Для игроков'}),
+    seg([['none','Скрыть'],['all','Показать']],shown(o)?'all':'none',onChange,label||'Для игроков','mini sea'));
 }
 
-/* --- блок сессии --- */
+/* --- блок экрана и сохранения --- */
 let savedStamp=null;
-const VERSION='11.11-4';   /* метка сборки: по ней видно, какая версия движка открыта */
+const VERSION='12.11-2';   /* метка сборки: по ней видно, какая версия движка открыта */
 const saveBtn=()=>h('button',{class:'small primary',text:'Выгрузить сохранение',title:'Скачать save.js: все карты приключения, фишки, видимость, журнал',onclick:()=>{savedStamp=exportSave();renderSession()}});
 const saveNote=()=>savedStamp?h('p',{class:'note',text:'Сохранение от '+savedStamp+' скачано (save.js). Положи его в папку adventures/'+ADV.id+' вместо старого.'}):'';
 const renderSession=panelFn('pSession',()=>{
-  const box=$('sessionBody'); box.innerHTML='';
-  if(S.role==='solo'){
-    const codeIn=h('input',{type:'text',id:'joinCode',maxlength:'10',placeholder:'Код от мастера','aria-label':'Код сессии'});
-    box.append(
-      h('div',{class:'row'},h('button',{class:'primary',text:'Создать сессию (я мастер)',onclick:()=>hostSession(false)})),
-      h('div',{class:'row'},codeIn,h('button',{text:'Войти как игрок',onclick:()=>joinSession(codeIn.value,false)}),h('button',{text:'Как общий экран',onclick:()=>joinSession(codeIn.value,true)})),
-      ADV.maps.length>1&&h('div',{class:'row'},h('span',{class:'lbl',text:'Карта'}),
-        (()=>{const sel=h('select',{id:'mapOpen','aria-label':'Открыть карту',onchange:e=>{if(e.target.value!==MAP.id){persist();location.href=mapUrl(e.target.value)}}},
-            ADV.maps.map(m=>h('option',{value:m.id,text:m.title||m.id})));sel.value=MAP.id;return sel})()),
-      h('div',{class:'row'},saveBtn(),h('a',{class:'btnlink',href:location.pathname,text:'Все приключения'}),h('span',{class:'cnt',text:'версия '+VERSION})),saveNote());
-  }else if(S.role==='dm'){
-    const link=shareLink(), linkOut=h('p',{class:'link'});
-    const copy=(kind,btn)=>{const l=shareLink(kind);linkOut.textContent=l;const t=btn.textContent;
-      navigator.clipboard.writeText(l).then(()=>{btn.textContent='Скопировано';setTimeout(()=>btn.textContent=t,1800)})
-        .catch(()=>{const r=document.createRange();r.selectNodeContents(linkOut);getSelection().removeAllRanges();getSelection().addRange(r)})};
-    box.append(
-      h('div',{class:'row'},h('span',{class:'code',text:code}),
-        link&&h('button',{class:'primary',text:'Ссылка для игроков',onclick:e=>copy('player',e.currentTarget)}),
-        link&&h('button',{text:'Ссылка для экрана',onclick:e=>copy('screen',e.currentTarget)})),
-      link?linkOut:h('p',{class:'note',text:'Карта открыта как файл: игроки и экран открывают свою копию и вводят код.'}),
-      ADV.maps.some(m=>m.id!==MAP.id)&&h('div',{class:'row'},h('span',{class:'lbl',text:'Перейти на карту'}),
-        (()=>{const sel=h('select',{id:'mapSwitch','aria-label':'Перейти на карту'},h('option',{value:'',text:'выбери карту'}),
-            ADV.maps.filter(m=>m.id!==MAP.id).map(m=>h('option',{value:m.id,text:m.title||m.id})));return sel})(),
-        h('button',{class:'small primary',text:'Перейти со всеми',title:'Игроки и экран переключатся следом, код сессии тот же',onclick:()=>{const v=$('mapSwitch').value;if(v)switchMap(v)}})),
-      h('div',{class:'row'},
-        h('button',{class:'small',text:'Экран: весь план',onclick:()=>{goFocus(0);S.focus={n:0,at:Date.now()};changed()}}),
-        saveBtn(),
-        h('button',{class:'small danger',text:'Завершить сессию',onclick:endHosting})),saveNote());
-  }else if(S.role==='player'){
-    const nameIn=h('input',{type:'text',id:'myName',maxlength:'24',placeholder:'Как тебя зовут',value:ME.name,'aria-label':'Твоё имя',
-      onchange:e=>{ME.name=e.target.value.trim();LS('dnd-player-name',ME.name);sendHello()}});
-    box.append(h('div',{class:'row'},nameIn,h('button',{class:'small',text:'Выйти из сессии',onclick:()=>{history.replaceState(null,'',location.pathname+location.search);leave()}})),
-      !ME.name&&h('p',{class:'note',text:'Впиши имя, чтобы мастер мог закрепить за тобой героя.'}));
-  }
+  if(!isDM())return;
+  const box=$('sessionBody'), on=screenOn(), card=showCard(); box.innerHTML='';
+  setStatus(on?'live':'',on?'Экран для игроков открыт и получает карту.':'Экран для игроков не открыт.');
+  box.append(
+    h('div',{class:'row'},h('button',{class:on?'':'primary',text:on?'Открыть экран заново':'Открыть экран для игроков',onclick:openScreen}),
+      h('button',{class:'small',text:'Экран: весь план',title:'Вернуть экрану игроков общий вид карты',onclick:()=>{S.focus={n:0,at:Date.now()};changed()}})),
+    !on&&h('p',{class:'note',text:'Откроется второе окно. Перетащи его на телевизор или второй монитор и нажми в нём «На весь экран». Если телевизор показывает то же, что и ноутбук, нажми Win+P и выбери «Расширить».'}),
+    h('label',{class:'check'},h('input',{type:'checkbox',id:'followCam',checked:UI.follow,onchange:e=>{UI.follow=e.target.checked;LS('dnd-follow',UI.follow?'1':null);changed();if(UI.follow)sendCam(true)}}),
+      h('span',{text:'Экран повторяет мою камеру'})),
+    card&&h('div',{class:'row'},h('span',{class:'note',style:'flex:1',text:'На экране карточка: '+card.title}),h('button',{class:'small',text:'Убрать',onclick:hideCard})),
+    ADV.maps.some(m=>m.id!==MAP.id)&&h('div',{class:'row'},h('span',{class:'lbl',text:'Другая карта'}),
+      (()=>{const sel=h('select',{id:'mapSwitch','aria-label':'Перейти на карту',onchange:e=>{UI.mapPick=e.target.value}},h('option',{value:'',text:'выбери карту'}),
+        ADV.maps.filter(m=>m.id!==MAP.id).map(m=>h('option',{value:m.id,text:m.title||m.id})));sel.value=UI.mapPick||'';return sel})(),
+      h('button',{class:'small primary',text:'Перейти',title:'Экран игроков переключится следом. Герои и журнал идут с партией',onclick:()=>{const v=$('mapSwitch').value;if(v)switchMap(v)}})),
+    h('div',{class:'row'},saveBtn(),h('a',{class:'btnlink',href:location.pathname,text:'Все приключения'}),h('span',{class:'cnt',text:'версия '+VERSION})),saveNote());
 });
 
 /* --- блок комнат --- */
@@ -1118,32 +1423,40 @@ function textBlock(r,field,label,cls,placeholder){
   }
   return box;
 }
-function setRoomVis(n,patch){S.roomVis[n]={...roomVis(n),...patch};refreshAll();changed()}
+function setRoomVis(n,vis){S.roomVis[n]={vis};if(vis!=='all'&&S.show&&S.show.k==='room'&&S.show.n===n)S.show=null;refreshAll();changed()}
+/* «Показать на экране»: открыть игрокам, навести экран и вывести карточку с описанием */
+function showRoom(n){S.roomVis[n]={vis:'all'};S.focus={n,at:Date.now()};S.show={k:'room',n};refreshAll();changed()}
+function showObj(id){const t=S.tokens.get(id);if(!t)return;S.focus={x:t.data.x,z:t.data.z,at:Date.now()};S.show={k:'obj',id};patchToken(id,{vis:'all'})}
+const isShown=(k,key)=>!!S.show&&S.show.k===k&&(k==='room'?S.show.n===key:S.show.id===key)&&!!showCard();
+function hideCard(){S.show=null;refreshAll();changed()}
 const renderRooms=panelFn('pRooms',()=>{
   const bar=$('roomsBar'); bar.innerHTML='';
   if(isDM())bar.append(h('span',{class:'lbl',text:'Вид'}),seg([['dm','Мастер'],['players','Как у игроков']],S.view,v=>{S.view=v;UI.pop=null;refreshAll()},'Вид карты'));
   bar.append(h('button',{class:'small',text:'Весь план',onclick:()=>{S.current=null;renderRooms();renderScreen();flyTo(HOME.target.clone(),HOME.pos.clone())}}));
   const list=$('rooms'); list.innerHTML='';
-  const counts={}; S.tokens.forEach(t=>{if(tokenShown(t)&&t.data.kind!=='object'){const n=cellRoom(t.data.x,t.data.z);counts[n]=(counts[n]||0)+1}});
+  const counts={}; S.tokens.forEach(t=>{if(tokenShown(t)&&(t.data.kind==='hero'||t.data.kind==='monster')){const n=cellRoom(t.data.x,t.data.z);counts[n]=(counts[n]||0)+1}});
   const listed=ROOMS.filter(r=>roomListed(r.n));
   listed.forEach(r=>{
     list.append(h('li',{class:r===S.current?'active':''},
       h('button',{class:'rm',onclick:()=>select(r.n)},h('span',{class:'n',text:r.n}),h('span',{text:r.name})),
       counts[r.n]&&h('span',{class:'cnt',text:'фишек: '+counts[r.n]}),
-      masterView()&&visBadge(pid=>roomOpenFor(r.n,pid),roomVis(r.n))));
+      masterView()&&visBadge(roomOpen(r.n))));
     r.pin.classList.toggle('active',r===S.current);
   });
-  if(!listed.length)list.append(h('li',{},h('span',{class:'note',text:'Мастер пока не открыл ни одной комнаты.'})));
+  if(!listed.length)list.append(h('li',{},h('span',{class:'note',text:'Игрокам пока не показана ни одна комната.'})));
   const d=$('detail'); d.innerHTML=''; const r=S.current;
   if(!r||!roomListed(r.n)){
     d.append(h('p',{class:'note',text:masterView()
       ?(MAP.overview||('Помещений на карте: '+ROOMS.length+'.'))+' Выбери комнату: видимость, описание, изменения и заметки настраиваются здесь.'
-      :'Выбери комнату, чтобы прочитать описание. Остальное скрыто, пока мастер не откроет.'}));
+      :'Так карту видят игроки. Выбери комнату, чтобы прочитать её описание.'}));
     return;
   }
   d.append(h('h3',{text:r.n+'. '+r.name}));
-  if(masterView())d.append(visControl(roomVis(r.n),p=>setRoomVis(r.n,p),'Кто видит комнату'),
-    S.role==='dm'&&h('div',{class:'row'},h('button',{class:'primary small',text:'Открыть всем и навести камеры',onclick:()=>{S.focus={n:r.n,at:Date.now()};setRoomVis(r.n,{vis:'all'})}})));
+  if(masterView())d.append(visControl(roomVis(r.n),v=>setRoomVis(r.n,v),'Комната для игроков'),
+    h('div',{class:'row'},
+      isShown('room',r.n)?h('button',{class:'small',text:'Убрать карточку с экрана',onclick:hideCard})
+        :h('button',{class:'primary small',text:'Показать на экране',title:'Открыть комнату игрокам, навести на неё экран и вывести карточку с описанием',onclick:()=>showRoom(r.n)}),
+      h('button',{class:'small',text:'Навести экран',title:'Повернуть экран игроков к этой комнате',onclick:()=>{S.focus={n:r.n,at:Date.now()};changed()}})));
   const change=roomText(r,'change');
   if(isDM()||change)d.append(h('div',{class:'duo'},textBlock(r,'read','Описание','read','Описания пока нет.'),textBlock(r,'change',isDM()?'Изменчивость':'Что изменилось','change','Пока без изменений. Сюда пиши, что в комнате стало не так, как в описании: игроки это увидят.')));
   else d.append(textBlock(r,'read','Описание','read','Описания пока нет.'));
@@ -1153,48 +1466,58 @@ const renderRooms=panelFn('pRooms',()=>{
 /* --- бортовой журнал --- */
 const timeOf=at=>{const d=new Date(at);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 const renderLog=panelFn('pLog',()=>{
-  const p=$('pLog'), box=$('logBody'); p.hidden=S.role==='screen'; if(p.hidden)return;
+  const p=$('pLog'), box=$('logBody'); p.hidden=!isDM(); if(p.hidden)return;
   box.innerHTML='';
-  if(isDM()){
-    const ta=h('textarea',{id:'logText',maxlength:'400',placeholder:'Что произошло: «Шайлушай нашёл ключ в саркофаге»','aria-label':'Запись в журнал',value:UI.logText,
-      oninput:e=>{UI.logText=e.target.value},onkeydown:e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))write()}});
-    const write=()=>{const t=ta.value.trim();if(!t)return;UI.logText='';ta.value='';ta.blur();addLog(t,UI.logVis)};
-    box.append(ta,visControl(UI.logVis,v=>{UI.logVis=v;renderLog()},'Кто увидит запись'),
-      h('div',{class:'row'},h('button',{class:'primary',text:'Записать',onclick:write}),h('span',{class:'note',text:'Ctrl+Enter'})));
-  }
-  if(!S.log.length){box.append(h('p',{class:'note',text:isDM()?'Журнал пуст. Записывай сюда ключевые события: у каждой записи своя видимость.':'Мастер пока ничего не записал.'}));return}
+  const ta=h('textarea',{id:'logText',maxlength:'400',placeholder:'Что произошло: «Шайлушай нашёл ключ в саркофаге»','aria-label':'Запись в журнал',value:UI.logText,
+    oninput:e=>{UI.logText=e.target.value},onkeydown:e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))write()}});
+  const write=()=>{const t=ta.value.trim();if(!t)return;UI.logText='';ta.value='';ta.blur();addLog(t,UI.logVis)};
+  box.append(ta,visControl({vis:UI.logVis},v=>{UI.logVis=v;renderLog()},'Запись для игроков'),
+    h('div',{class:'row'},h('button',{class:'primary',text:'Записать',onclick:write}),h('span',{class:'note',text:'Ctrl+Enter'})));
+  if(!S.log.length){box.append(h('p',{class:'note',text:'Журнал пуст. Записывай сюда ключевые события: последнюю показанную запись игроки видят на своём экране.'}));return}
   box.append(h('div',{class:'sub'},h('h3',{text:'Записи'}),h('span',{class:'cnt',text:S.log.length})));
   box.append(h('div',{class:'list'},S.log.map(e=>{
-    const open=isDM()&&UI.openLog===e.id;
-    const el=h('div',{class:'entry'+(isDM()?' click':'')+(open?' open':'')},
-      h('div',{class:'meta'},h('span',{class:'cnt',text:timeOf(e.at)}),isDM()&&visBadge(pid=>seesVis(e,pid),e)),
+    const open=UI.openLog===e.id;
+    const el=h('div',{class:'entry click'+(open?' open':'')},
+      h('div',{class:'meta'},h('span',{class:'cnt',text:timeOf(e.at)}),visBadge(shown(e)),e.auto&&h('span',{class:'auto',text:'авто'})),
       h('p',{class:'what',text:e.text}));
-    if(isDM())el.firstChild.onclick=el.lastChild.onclick=()=>{UI.openLog=open?null:e.id;renderLog()};
-    if(open)el.append(visControl(e,v=>{Object.assign(e,v);refreshAll();changed()},'Кто видит запись'),
+    el.firstChild.onclick=el.lastChild.onclick=()=>{UI.openLog=open?null:e.id;renderLog()};
+    if(open)el.append(visControl(e,v=>{e.vis=v;refreshAll();changed()},'Запись для игроков'),
       h('div',{class:'row'},h('button',{class:'small danger',text:'Удалить запись',onclick:()=>{S.log=S.log.filter(x=>x!==e);UI.openLog=null;refreshAll();changed()}})));
     return el;
   })));
 });
 
 /* --- фишки и объекты --- */
+/* в одной клетке стоит одна фишка; метки клеток не занимают, на колонну встать нельзя */
+const solid=d=>d.kind!=='mark';
+/* на колонне и под крупным предметом никто не стоит. Метки встают куда угодно, объекты (они описывают предмет) могут стоять на предмете */
+const canStand=(x,y,kind)=>isOpen(x,y)&&(kind==='mark'||(g[y][x]!=='P'&&(kind==='object'||!blocked.has(x+','+y))));
+const cellTaken=(x,y,but)=>[...S.tokens.values()].some(t=>t.id!==but&&solid(t.data)&&Math.floor(t.data.x)===x&&Math.floor(t.data.z)===y);
+function freeNear(cx,cy,but,px,pz,kind){
+  const room=roomOf[cy][cx], c=[];
+  for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const x=cx+dx,y=cy+dy;
+    if((dx||dy)&&canStand(x,y,kind)&&roomOf[y][x]===room&&!cellTaken(x,y,but))c.push([x,y,Math.hypot(x+.5-px,y+.5-pz)])}
+  c.sort((a,b)=>a[2]-b[2]); return c[0]||null;
+}
 function spawnCell(roomN){
-  const occupied=new Set([...S.tokens.values()].map(t=>Math.floor(t.data.x)+','+Math.floor(t.data.z)));
+  const occupied=new Set([...S.tokens.values()].filter(t=>solid(t.data)).map(t=>Math.floor(t.data.x)+','+Math.floor(t.data.z)));
   const rects=roomN?ROOMS.find(r=>r.n===roomN).rects:[MAP.spawn||ROOMS[0].rects[0]];
   for(const [sx,sy,sw,sh] of rects)for(let y=sy;y<sy+sh;y++)for(let x=sx;x<sx+sw;x++)
-    if(isOpen(x,y)&&g[y][x]==='.'&&!occupied.has(x+','+y))return [x+.5,y+.5];
+    if(isOpen(x,y)&&g[y][x]==='.'&&!blocked.has(x+','+y)&&!occupied.has(x+','+y))return [x+.5,y+.5];
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(g[y][x]==='.'&&!blocked.has(x+','+y)&&!occupied.has(x+','+y))return [x+.5,y+.5];   /* вход забит: первая свободная клетка карты */
   return [rects[0][0]+.5,rects[0][1]+.5];
 }
 function addToken(p){
-  const all=[...S.tokens.values()], heroes=all.filter(t=>t.data.kind==='hero').length;
+  const all=[...S.tokens.values()], heroes=all.filter(t=>t.data.kind==='hero').length, marks=all.filter(t=>t.data.kind==='mark').length;
   const same=all.filter(t=>t.data.base===p.name).length;
   const [x,z]=spawnCell(S.current&&masterView()?S.current.n:0);
-  const d={name:same&&p.kind!=='hero'?p.name+' '+(same+1):p.name,base:p.name,kind:p.kind,x,z,vis:'all',except:[],
-    color:p.kind==='hero'?HERO_COLORS[heroes%HERO_COLORS.length]:p.kind==='object'?OBJ_COLOR:'#d0624e'};
-  if(p.kind==='hero'){d.owner=null;d.control=false}
+  const d={name:same&&p.kind!=='hero'?p.name+' '+(same+1):p.name,base:p.name,kind:p.kind,x,z,vis:'all',mScale:1,mRot:0,
+    color:p.kind==='hero'?HERO_COLORS[heroes%HERO_COLORS.length]:p.kind==='object'?OBJ_COLOR:p.kind==='mark'?MARK_COLORS[marks%MARK_COLORS.length]:'#d0624e'};
   if(p.kind==='monster'){d.hpMax=Math.max(1,+p.hp||1);d.hp=d.hpMax;d.dmg=p.dmg||'';d.feat=p.feat||''}
   if(p.kind==='object'){d.text=p.text||'';d.note=p.note||''}
+  if(p.kind==='mark'){d.shape='circle';d.size=2;d.rot=0}
   if(p.model)d.model=p.model;
-  const id='t'+uid(); upsertToken(id,d); UI.tokTab=p.kind; if(p.kind==='object'){UI.openTok.add(id);UI.tokEdit=id} refreshAll(); changed();
+  const id='t'+uid(); upsertToken(id,d); UI.tokTab=p.kind; if(p.kind==='object'||p.kind==='mark')UI.openTok.add(id); if(p.kind==='object')UI.tokEdit=id; refreshAll(); changed();
 }
 function flyToToken(id){const t=S.tokens.get(id);if(!t)return;const p=new THREE.Vector3(t.data.x,0,t.data.z);flyTo(p,p.clone().add(new THREE.Vector3(0,7,7)))}
 function savePresets(){LS('dnd-presets',JSON.stringify(presets))}
@@ -1205,11 +1528,12 @@ function hpCounter(t){
 /* меню сущности: одно и то же в списке и во всплывающем окне по клику на карте */
 function entityMenu(t,inPop){
   const d=t.data, id=t.id, body=h('div',{class:'tokBody'});
+  const btn=(text,label,fn)=>h('button',{class:'small',text,title:label,'aria-label':label,onclick:fn});
   if(UI.tokEdit===id){
     const nm=h('input',{type:'text',value:d.name,placeholder:'Название','aria-label':'Название'});
     const hp=h('input',{type:'number',min:'1',value:d.hpMax||1,style:'width:84px','aria-label':'Хиты'}),
       dmg=h('input',{type:'text',value:d.dmg||'',placeholder:'Урон','aria-label':'Урон'}), feat=h('input',{type:'text',value:d.feat||'',placeholder:'Особенность','aria-label':'Особенность'}),
-      text=h('textarea',{value:d.text||'',placeholder:'Что видят игроки, когда нажимают на объект','aria-label':'Текст для игроков'}),
+      text=h('textarea',{value:d.text||'',placeholder:'Что узнают игроки об этом объекте','aria-label':'Текст для игроков'}),
       note=h('textarea',{value:d.note||'',placeholder:'Заметка для мастера: что внутри, какая проверка','aria-label':'Заметка мастера'});
     body.append(h('div',{class:'row'},nm,d.kind==='monster'&&hp));
     if(d.kind==='monster')body.append(h('div',{class:'row'},dmg),h('div',{class:'row'},feat));
@@ -1227,28 +1551,34 @@ function entityMenu(t,inPop){
     body.append(h('div',{class:'kv'},h('span',{text:'Урон'}),h('span',{text:d.dmg||'не указан'}),h('span',{text:'Особенность'}),h('span',{text:d.feat||'нет'})));
   }else if(d.kind==='object'){
     body.append(h('div',{class:'kv'},h('span',{text:'Игрокам'}),h('span',{text:d.text||'текста нет'}),h('span',{text:'Мастеру'}),h('span',{text:d.note||'заметки нет'})));
-  }else{
-    const sel=h('select',{'aria-label':'Игрок',onchange:e=>patchToken(id,{owner:e.target.value||null,control:e.target.value?d.control:false})},
-      h('option',{value:'',text:'никто'}),Object.keys(S.players).map(pid=>h('option',{value:pid,text:playerName(pid)+(onlinePids().has(pid)?'':' · не в сети')})));
-    sel.value=d.owner||'';
-    body.append(h('div',{class:'row'},h('span',{class:'lbl',text:'Игрок'}),sel));
-    if(!Object.keys(S.players).length)body.append(h('p',{class:'note',text:'Игроки появятся в списке, когда подключатся к сессии.'}));
-    if(d.owner)body.append(h('div',{class:'row'},h('span',{class:'lbl',text:'Двигает'}),
-      seg([[false,'Мастер'],[true,'Сам игрок']],!!d.control,v=>patchToken(id,{control:v}),'Кто двигает фишку','mini')));
+  }else if(d.kind==='mark'){
+    const size=d.size||2, turn=d.shape==='cone'||d.shape==='line';
+    body.append(
+      h('div',{class:'field'},h('span',{class:'lbl',text:'Форма'}),seg(MARK_SHAPES,d.shape||'circle',v=>patchToken(id,{shape:v}),'Форма метки','mini')),
+      h('div',{class:'row tune'},h('span',{class:'lbl',text:d.shape==='circle'?'Радиус':d.shape==='square'?'Сторона':'Длина'}),
+        btn('−','Меньше',()=>patchToken(id,{size:Math.max(1,size-1)})),h('b',{text:size+' кл.'}),btn('+','Больше',()=>patchToken(id,{size:Math.min(24,size+1)})),
+        h('span',{class:'cnt',text:size*5+' футов'})),
+      turn&&h('div',{class:'row tune'},h('span',{class:'lbl',text:'Поворот'}),
+        btn('⟲','Повернуть влево',()=>patchToken(id,{rot:((d.rot||0)+15)%360})),h('b',{text:(d.rot||0)+'°'}),btn('⟳','Повернуть вправо',()=>patchToken(id,{rot:((d.rot||0)+345)%360}))),
+      h('div',{class:'field'},h('span',{class:'lbl',text:'Цвет'}),h('div',{class:'swatches'},MARK_COLORS.map(c=>{
+        const b=h('button',{'aria-pressed':String(c===d.color),'aria-label':'Цвет '+c,onclick:()=>patchToken(id,{color:c})});b.style.setProperty('--c',c);return b}))));
   }
-  body.append(visControl(d,p=>patchToken(id,p)));
-  if(MODELS.length){
-    const ms=h('select',{'aria-label':'3D-модель',onchange:e=>patchToken(id,{model:e.target.value||null})},
+  body.append(visControl(d,v=>{if(v!=='all'&&S.show&&S.show.id===id)S.show=null;patchToken(id,{vis:v})}));
+  if(d.kind==='object')body.append(h('div',{class:'row'},isShown('obj',id)?h('button',{class:'small',text:'Убрать карточку с экрана',onclick:hideCard})
+    :h('button',{class:'small primary',text:'Показать на экране',title:'Показать объект игрокам, навести на него экран и вывести карточку с описанием',onclick:()=>showObj(id)}),
+    !roomOpen(cellRoom(d.x,d.z))&&h('span',{class:'note',text:'комната скрыта: сначала покажи её'})));
+  if(MODELS.length&&d.kind!=='mark'){
+    const ms=h('select',{'aria-label':'3D-модель',onchange:e=>patchToken(id,{model:e.target.value||null,mScale:d.mScale||1,mRot:d.mRot||0})},
       h('option',{value:'',text:d.kind==='object'?'нет, маркер':'нет, обычная фишка'}),
       MODELS.filter(m=>!m.kind||m.kind===d.kind||m.id===d.model).map(m=>h('option',{value:m.id,text:m.name||m.id})));   /* только модели своего раздела и общие */
     ms.value=d.model||''; body.append(h('div',{class:'row'},h('span',{class:'lbl',text:'Модель'}),ms));
     if(d.model&&modelInfo(d.model)){
-      const c=cfgOf(d.model), btn=(text,label,fn)=>h('button',{class:'small',text,title:label,'aria-label':label,onclick:fn});
+      const c=tuneOf(d);
       body.append(h('div',{class:'row tune'},h('span',{class:'lbl',text:'Размер'}),
-          btn('−','Меньше',()=>setModelCfg(d.model,{scale:c.scale-.1})),h('b',{text:Math.round(c.scale*100)+'%'}),btn('+','Больше',()=>setModelCfg(d.model,{scale:c.scale+.1})),
-          h('span',{class:'lbl',text:'Поворот'}),btn('⟲','Повернуть влево',()=>setModelCfg(d.model,{rot:c.rot+45})),h('b',{text:c.rot+'°'}),btn('⟳','Повернуть вправо',()=>setModelCfg(d.model,{rot:c.rot-45})),
-          (c.scale!==1||c.rot!==0)&&btn('Сброс','Вернуть исходный размер и поворот',()=>setModelCfg(d.model,{scale:1,rot:0}))),
-        h('p',{class:'note',text:'Настройка относится к модели: изменится у всех фишек с ней, у игроков тоже.'}));
+          btn('−','Меньше',()=>setTune(id,{scale:c.scale-.1})),h('b',{text:Math.round(c.scale*100)+'%'}),btn('+','Больше',()=>setTune(id,{scale:c.scale+.1})),
+          h('span',{class:'lbl',text:'Поворот'}),btn('⟲','Повернуть влево',()=>setTune(id,{rot:c.rot+45})),h('b',{text:c.rot+'°'}),btn('⟳','Повернуть вправо',()=>setTune(id,{rot:c.rot-45})),
+          (c.scale!==1||c.rot!==0)&&btn('Сброс','Вернуть исходный размер и поворот',()=>setTune(id,{scale:1,rot:0}))),
+        h('p',{class:'note',text:'Размер и поворот у каждой фишки свои.'}));
     }
   }
   body.append(h('div',{class:'row'},!inPop&&h('button',{class:'small',text:'Где',onclick:()=>flyToToken(id)}),
@@ -1261,25 +1591,22 @@ function tokenRow(t){
   if(!masterView()){
     const row=h('div',{class:'tokRow'},h('span',{class:'dot'}),
       h('span',{class:'nmw'},h('b',{text:d.name}),d.kind==='object'&&d.text&&h('small',{text:d.text})),
-      d.mine&&h('span',{class:'badge ok',text:d.control?'твой, двигаешь сам':'твой'}),
       h('button',{class:'small',text:'Где',onclick:()=>flyToToken(id)}));
     row.style.setProperty('--c',d.color); return row;
   }
-  const det=h('details',{class:'tok'}); det.style.setProperty('--c',d.color); det.open=UI.openTok.has(id);
+  const det=h('details',{class:'tok'+(tokenOpen(d)?'':' off')}); det.style.setProperty('--c',d.color); det.open=UI.openTok.has(id);
   det.addEventListener('toggle',()=>{det.open?UI.openTok.add(id):UI.openTok.delete(id)});
   const sum=h('summary',{},h('span',{class:'dot'}),h('span',{class:'nm',text:d.name}));
   if(d.kind==='monster')sum.append(hpCounter(t));
-  else if(d.kind==='hero'&&d.owner)sum.append(h('span',{class:'badge '+(onlinePids().has(d.owner)?'ok':'wait'),text:playerName(d.owner)}));
-  sum.append(visBadge(pid=>tokenOpenFor(d,pid),d,roomVis(cellRoom(d.x,d.z))));
+  sum.append(visBadge(tokenOpen(d),tokWhy(d)));
   det.append(sum,entityMenu(t,false)); return det;
 }
-const KINDS=[['hero','Герои','Героев пока нет. Добавь кнопкой «+ Герой».'],['monster','Монстры','Монстров пока нет. Добавь из набора выше.'],['object','Объекты','Объектов пока нет. Это то, на что игроки могут нажать: сундук, рычаг, надпись.']];
+const KINDS=[['hero','Герои','Героев пока нет. Добавь кнопкой «+ Герой».'],['monster','Монстры','Монстров пока нет. Добавь из набора выше.'],['object','Объекты','Объектов пока нет. Это то, на что стоит обратить внимание: сундук, рычаг, надпись.'],['mark','Метки','Меток пока нет. Метка показывает область заклинания или ориентир.']];
 const renderTokens=panelFn('pTokens',()=>{
   const box=$('tokBody'); box.innerHTML='';
   const shown=[...S.tokens.values()].filter(tokenShown), mvw=masterView();
-  S.tokens.forEach(t=>{t.tag.classList.toggle('off',mvw&&!tokenOpenFor(t.data,null)&&!Object.keys(S.players).some(p=>tokenOpenFor(t.data,p)));
-    t.vis.hidden=!mvw;if(mvw)fillVis(t.vis,pid=>tokenOpenFor(t.data,pid),t.data,roomVis(cellRoom(t.data.x,t.data.z)))});
-  ROOMS.forEach(r=>{r.vis.hidden=!mvw;if(mvw)fillVis(r.vis,pid=>roomOpenFor(r.n,pid),roomVis(r.n))});
+  S.tokens.forEach(t=>{const on=tokenOpen(t.data);t.tag.classList.toggle('off',mvw&&!on);t.vis.hidden=!mvw;if(mvw)fillVis(t.vis,on,tokWhy(t.data),true)});
+  ROOMS.forEach(r=>{r.vis.hidden=!mvw;if(mvw)fillVis(r.vis,roomOpen(r.n),null,true)});
   if(mvw){
     const where=S.current?'в комнату «'+S.current.name+'»':'у входа';
     box.append(h('div',{class:'field'},h('span',{class:'lbl',text:'Быстро добавить '+where}),
@@ -1287,6 +1614,7 @@ const renderTokens=panelFn('pTokens',()=>{
           const n=[...S.tokens.values()].filter(t=>t.data.kind==='hero').length+1; addToken({name:'Герой '+n,kind:'hero'})}}),
         presets.map(p=>h('button',{class:'chip',text:'+ '+p.name,title:p.kind==='monster'?`Хиты ${p.hp} · ${p.dmg||''}`:'',onclick:()=>addToken(p)})),
         h('button',{class:'chip obj',text:'+ Объект',onclick:()=>addToken({name:'Объект',kind:'object'})}),
+        h('button',{class:'chip mark',text:'+ Метка',title:'Область заклинания или ориентир',onclick:()=>addToken({name:'Метка',kind:'mark'})}),
         h('button',{class:'chip',text:UI.presetEdit?'Готово':'Настроить набор','aria-pressed':String(UI.presetEdit),onclick:()=>{UI.presetEdit=!UI.presetEdit;renderTokens()}}))));
     if(UI.presetEdit){
       const ed=h('div',{class:'list'});
@@ -1333,12 +1661,24 @@ const renderPop=panelFn('pop',()=>{
   const d=t.data; el.hidden=false; el.innerHTML=''; el.style.setProperty('--c',d.color);
   el.append(h('header',{},h('span',{class:'dot'}),h('h3',{text:d.name}),h('span',{style:'flex:1'}),
     h('button',{class:'icon',text:'×','aria-label':'Закрыть',onclick:()=>{UI.pop=null;UI.tokEdit=null;renderPop()}})));
-  if(masterView()){el.append(h('div',{class:'popvis'},visBadge(pid=>tokenOpenFor(d,pid),d,roomVis(cellRoom(d.x,d.z)))),entityMenu(t,true))}
+  if(masterView()){el.append(h('div',{class:'popvis'},visBadge(tokenOpen(d),tokWhy(d))),entityMenu(t,true))}
   else el.append(h('p',{class:'what',text:d.text||'Ничего примечательного.'}));
-  const w=app.clientWidth,hh=app.clientHeight,r=el.getBoundingClientRect();
-  el.style.left=Math.max(8,Math.min(w-r.width-8,p.x+18))+'px';
-  el.style.top=Math.max(8,Math.min(hh-r.height-8,p.y-30))+'px';
+  placePop();
 });
+/* окно меню встаёт сбоку от выбранной фишки и никогда её не закрывает */
+function placePop(){
+  const el=$('pop'), p=UI.pop, t=p&&S.tokens.get(p.id); if(el.hidden||!t)return;
+  const w=app.clientWidth, hh=app.clientHeight, pw=el.offsetWidth, ph=el.offsetHeight, gap=70;
+  const bot=hh-(document.body.classList.contains('has-cb')&&innerWidth>860?100:8);
+  pv.set(t.grp.position.x,(t.tagY||1)*.5,t.grp.position.z).project(camera);
+  const tx=(pv.x*.5+.5)*w, ty=(-pv.y*.5+.5)*hh;
+  let x, y=Math.max(8,Math.min(bot-ph,ty-ph/2));
+  if(tx+gap+pw<=w-8)x=tx+gap;                 /* справа от фишки */
+  else if(tx-gap-pw>=8)x=tx-gap-pw;           /* слева */
+  else{x=Math.max(8,Math.min(w-pw-8,tx-pw/2));y=ty-gap-40-ph>=8?ty-gap-40-ph:Math.min(Math.max(8,bot-ph),ty+gap)}   /* узкий экран: выше или ниже */
+  el.style.left=Math.round(x)+'px'; el.style.top=Math.round(y)+'px';
+}
+const pv=new THREE.Vector3();
 function tokenClicked(t,x,y){
   if(masterView()||t.data.kind==='object'){UI.pop={id:t.id,x,y};UI.tokEdit=null;renderPop()}
 }
@@ -1357,11 +1697,13 @@ $('tokWide').onclick=()=>setWide(!$('pTokens').classList.contains('wide'));
 addEventListener('resize',()=>renderTokens());
 
 function renderScreen(){
-  const on=S.role==='screen';
+  const on=remote();
   document.body.classList.toggle('screen',on); $('screenUI').hidden=!on;
   if(!on)return;
   $('scrRoom').textContent=S.current?S.current.n+'. '+S.current.name:'';
-  const lg=S.log[0], el=$('scrLog');
+  const lg=S.log[0], el=$('scrLog'), c=S.card, ce=$('scrCard');
+  ce.hidden=!c; ce.innerHTML='';
+  if(c)ce.append(h('h3',{text:c.title}),h('p',{text:c.text||'Ничего примечательного.'}),c.change&&h('p',{class:'chg',text:c.change}));
   el.textContent=lg?lg.text:''; el.hidden=!lg;
 }
 function renderTabs(){
@@ -1376,27 +1718,33 @@ function renderTabs(){
 function refreshAll(){
   const dm=masterView();
   dmOnly.forEach(o=>o.visible=dm); playerOnly.forEach(o=>o.visible=!dm);
-  applyFog(); renderSession(); renderRooms(); renderLog(); renderTokens(); renderPop(); renderScreen(); renderTabs();
+  applyFog(); renderCb(); renderSession(); renderRooms(); renderLog(); renderTokens(); renderPop(); renderScreen(); renderTabs();
 }
 function select(n){
   S.current=ROOMS.find(r=>r.n==n&&roomListed(r.n))||null; UI.edit=null;
   renderRooms(); renderTokens(); renderScreen();
   if(S.current){const t=new THREE.Vector3(S.current.x,0,S.current.z);flyTo(t,t.clone().add(new THREE.Vector3(0,8.5,8)))}
 }
-function goFocus(n){if(n){select(n)}else{S.current=null;renderRooms();renderScreen();flyTo(HOME.target.clone(),HOME.pos.clone())}}
-$('scrLeave').onclick=()=>{history.replaceState(null,'',location.pathname+location.search);leave()};
+/* навести камеру: на комнату {n}, на точку {x,z} или на весь план */
+function goFocus(f){
+  if(f&&f.x!=null){
+    S.current=ROOMS.find(r=>r.n===cellRoom(f.x,f.z)&&roomListed(r.n))||null; renderRooms(); renderScreen();
+    const p=new THREE.Vector3(f.x,0,f.z); flyTo(p,p.clone().add(new THREE.Vector3(0,6,6))); return;
+  }
+  if(f&&f.n)select(f.n); else{S.current=null;renderRooms();renderScreen();flyTo(HOME.target.clone(),HOME.pos.clone())}
+}
+$('scrLeave').onclick=()=>window.close();
+document.addEventListener('fullscreenchange',()=>document.body.classList.toggle('fs',!!document.fullscreenElement));
 $('fsBtn').onclick=()=>{
   const d=document;
   if(d.fullscreenElement){d.exitFullscreen&&d.exitFullscreen()}
   else{const r=d.documentElement.requestFullscreen&&d.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{})}
 };
 function init(){
+  if(SCREEN){refreshAll();screenBoot();return}
   importSave(); LS(AK('current'),MAP.id);
-  loadLocal(); soloStatus(); refreshAll();
-  const hsh=location.hash.slice(1);
-  if(/^screen-/i.test(hsh))joinSession(hsh.slice(7),true);
-  else if(hsh)joinSession(hsh,false);
-  else if(LS('dnd-session-hosting')==='1')hostSession(true);
+  loadLocal(); refreshAll(); broadcast();
+  setInterval(checkScreen,2000);
 }
 
 /* ---------- Перетаскивание и клики по фишкам ---------- */
@@ -1430,14 +1778,12 @@ function endDrag(e){
   const pr=press&&e.pointerId===press.pid?press:null; if(pr)press=null;
   const clicked=pr&&e.type==='pointerup'&&Math.hypot(e.clientX-pr.x,e.clientY-pr.y)<6;
   if(drag&&e.pointerId===drag.pid){
-    const t=drag.tok, from=drag.from, moved=drag.moved, cx=Math.floor(t.target.x), cy=Math.floor(t.target.z);
+    const t=drag.tok, from=drag.from, moved=drag.moved, cx=Math.floor(t.target.x), cy=Math.floor(t.target.z), mark=!solid(t.data);
     drag=null; controls.enabled=true;
-    const ok=moved&&isOpen(cx,cy)&&(cx+.5!==from.x||cy+.5!==from.z);
-    if(!ok)t.target.set(from.x,0,from.z);
-    else if(S.role==='player'){
-      if(toHost({type:'move',tokenId:t.id,x:cx+.5,z:cy+.5})){t.data={...t.data,x:cx+.5,z:cy+.5};t.target.set(cx+.5,0,cy+.5)}
-      else t.target.set(from.x,0,from.z);
-    }else patchToken(t.id,{x:cx+.5,z:cy+.5});
+    let dest=moved&&canStand(cx,cy,t.data.kind)?[cx,cy]:null;
+    if(dest&&!mark&&cellTaken(cx,cy,t.id))dest=freeNear(cx,cy,t.id,t.target.x,t.target.z,t.data.kind);   /* клетка занята: встаём в ближайшую свободную */
+    if(!dest||(dest[0]+.5===from.x&&dest[1]+.5===from.z))t.target.set(from.x,0,from.z);
+    else patchToken(t.id,{x:dest[0]+.5,z:dest[1]+.5});
   }
   if(clicked)tokenClicked(pr.tok,e.clientX,e.clientY);
 }
@@ -1493,7 +1839,10 @@ function loop(){
     if(!dragging)tk.grp.position.lerp(tk.target,calm?1:Math.min(1,dt*12));
     tk.grp.visible=tokenShown(tk); tk.grp.position.y=dragging&&drag.moved?.25:0;
     if(tk.spin&&!calm){tk.spin.rotation.y=t*1.6;tk.spin.position.y=1.25+Math.sin(t*2+tk.target.x)*.05}
+    if(tk.fill&&!calm)tk.fill.material.opacity=.19+Math.sin(t*2.2+tk.target.x)*.05;
   });
+  if(camGoal){const k=calm?1:Math.min(1,dt*9);controls.target.lerp(camGoal.t,k);camera.position.lerp(camGoal.p,k)}
+  if(isDM()&&UI.follow&&t-camAt>.08){camAt=t;sendCam()}
   renderer.render(scene,camera);
   const w=app.clientWidth,hh=app.clientHeight, vis=shownRooms(), mv=masterView();
   ROOMS.forEach(r=>{
@@ -1503,10 +1852,12 @@ function loop(){
   S.tokens.forEach(tk=>{
     if(!tk.grp.visible){tk.tag.style.display='none';return}
     if(tk.tn.textContent!==tk.data.name)tk.tn.textContent=tk.data.name;
-    place(tk.tag,tk.grp.position.x,tk.tagY||(tk.spin?1.6:1.05),tk.grp.position.z,w,hh,' translate(-50%,-100%)');
+    place(tk.tag,tk.grp.position.x,tk.tagY||(tk.area?.95:tk.spin?1.6:1.05),tk.grp.position.z,w,hh,' translate(-50%,-100%)');
   });
+  if(UI.pop)placePop();
   requestAnimationFrame(loop);
 }
+if(new URLSearchParams(location.search).has('debug'))window.__dnd={S,UI,camera,controls,THREE,app,patchToken,addToken,loadFull,refreshAll,canStand,blocked:()=>[...blocked],dbg:()=>({el:clock.elapsedTime,role:S.role,follow:UI.follow,camGoal,camSent,camAt,fly:!!fly,scr:screenSeen})};
 loop(); init();
 })();
 </script>

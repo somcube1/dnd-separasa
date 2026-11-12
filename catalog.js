@@ -19,25 +19,6 @@ window.CATALOG = {
     }
    ],
    "models": []
-  },
-  {
-   "id": "utonuvshiy-korol",
-   "title": "Утонувший король",
-   "note": "Таверна «Пьяный гусь», контрабандисты в погребе и крипта старого короля.",
-   "start": "tavern",
-   "maps": [
-    {
-     "id": "krypt",
-     "file": "krypt.js",
-     "title": "Крипта Утонувшего Короля"
-    },
-    {
-     "id": "tavern",
-     "file": "tavern.js",
-     "title": "Таверна «Пьяный гусь»"
-    }
-   ],
-   "models": []
   }
  ],
  "models": [

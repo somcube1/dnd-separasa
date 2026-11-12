@@ -55,7 +55,7 @@ ol,ul{list-style:none;padding:0}
 .col{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));
   display:flex;flex-direction:column;gap:12px;pointer-events:none}
 #colL{left:max(14px,env(safe-area-inset-left,0px));width:var(--colL)}
-#colR{right:max(14px,env(safe-area-inset-right,0px));width:var(--colR);justify-content:space-between}
+#colR{right:max(14px,env(safe-area-inset-right,0px));width:var(--colR);justify-content:flex-start}
 .panel{pointer-events:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;backdrop-filter:blur(6px);
   display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
 #pSession{flex:0 0 auto}
@@ -416,6 +416,45 @@ body.screen:not(.fs) .scr-tools{opacity:1}
   #cb .setup .cols{grid-template-columns:1fr}
   #cb .setup .cols>div+div{border-left:0;border-top:1px solid var(--line)}
 }
+
+/* ---- 12.11-3: справка на экране, вкладки журнала, пул ---- */
+.scr-ref{position:absolute;top:calc(18px + env(safe-area-inset-top,0px));left:max(22px,env(safe-area-inset-left,0px));width:min(30vw,520px);max-height:58%;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+.scr-ref[hidden]{display:none}
+.scr-ref .adv{font:600 clamp(12px,1vw,15px) var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-left:4px}
+.scr-ref .frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 18px 14px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.scr-ref h4{font:700 clamp(18px,1.9vw,28px)/1.1 var(--display);color:var(--torch);margin:0 0 5px}
+.scr-ref ul{list-style:none;display:flex;flex-direction:column;gap:6px;padding:0;margin:0}
+.scr-ref li{font-size:clamp(15px,1.3vw,21px);line-height:1.35;padding-left:14px;position:relative}
+.scr-ref li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--sea)}
+.scr-now{position:absolute;left:max(24px,env(safe-area-inset-left,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));font:700 clamp(18px,1.8vw,28px) var(--display);color:var(--torch);text-shadow:0 2px 10px #000}
+.scr-now[hidden]{display:none}
+body.has-cb .scr-now{bottom:176px}
+#cb .tvtimer.wait{max-width:340px;align-items:flex-start}
+#cb .tvtimer .twait{font-size:19px;line-height:1.35;font-style:italic;color:var(--ink)}
+#cb .tnote{font-size:12.5px;color:var(--blood);max-width:170px}
+#cb .resume{background:var(--blood);color:#fff;border-color:var(--blood);font-weight:700}
+.entry .meta .icon{padding:2px 6px;min-height:0}
+.entry textarea{width:100%;min-height:70px}
+.poolbar{display:flex;align-items:center;gap:10px}
+.poolbtn{padding:3px 22px;font:700 14px var(--display);letter-spacing:.14em;text-transform:uppercase;border-color:var(--torch);color:var(--torch);border-radius:5px}
+.addrow{display:flex;flex-direction:column;gap:6px}
+#poolWin{position:fixed;inset:0;z-index:80;background:rgba(5,8,9,.62);display:flex;align-items:center;justify-content:center;padding:16px}
+#poolWin[hidden]{display:none}
+.poolcard{background:#11181a;border:1px solid var(--line);border-radius:10px;width:min(900px,100%);max-height:100%;display:flex;flex-direction:column;gap:10px;padding:14px 18px 16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.poolcard>header{display:flex;align-items:center;gap:10px}
+.poolcard>header h2{font:700 26px var(--display);color:var(--torch)}
+.poolcard>header small{color:var(--muted);font-size:14px}
+.poollist{display:flex;flex-direction:column;gap:8px;overflow:auto;min-height:0;padding-right:4px}
+details.pcard{border:1px solid var(--soft);border-radius:6px}
+details.pcard[open]{border-color:var(--line)}
+details.pcard>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 12px;min-height:42px}
+details.pcard>summary::-webkit-details-marker{display:none}
+details.pcard>summary b{flex:1}
+details.pcard .pbody{display:flex;flex-direction:column;gap:8px;padding:4px 12px 12px}
+details.pcard .pbody label.f{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center}
+details.pcard .pbody label.f.top{align-items:start}
+details.pcard .pbody input[type=text],details.pcard .pbody input[type=number],details.pcard .pbody select,details.pcard .pbody textarea{width:100%}
+details.pcard .pbody textarea{min-height:64px}
 </style>
 </head>
 <body>
@@ -438,8 +477,8 @@ body.screen:not(.fs) .scr-tools{opacity:1}
         <header><h2>Бортовой журнал</h2><span class="grow"></span><button class="fold" aria-label="Свернуть блок"></button></header>
         <div class="body" id="logBody"></div>
       </section>
-      <section class="panel" id="pTokens" data-tab="Фишки">
-        <header><h2>Фишки и объекты</h2><span class="grow"></span><button class="icon" id="tokWide" title="Развернуть на весь экран" aria-label="Развернуть на весь экран" aria-pressed="false"></button><button class="fold" aria-label="Свернуть блок"></button></header>
+      <section class="panel" id="pTokens" data-tab="Сущности">
+        <header><h2>Сущности</h2><span class="grow"></span><button class="icon" id="tokWide" title="Развернуть на весь экран" aria-label="Развернуть на весь экран" aria-pressed="false"></button><button class="fold" aria-label="Свернуть блок"></button></header>
         <div class="body" id="tokBody"></div>
       </section>
     </div>
@@ -447,9 +486,10 @@ body.screen:not(.fs) .scr-tools{opacity:1}
   </div>
   <div id="cb" hidden></div>
   <div id="pop" hidden></div>
+  <div id="poolWin" hidden></div>
   <div id="screenUI" hidden>
-    <div class="scr-title"><span class="eyebrow" data-map-title></span><strong id="scrRoom"></strong></div>
-    <div class="scr-log" id="scrLog" hidden></div>
+    <div class="scr-ref" id="scrRef" hidden></div>
+    <div class="scr-now" id="scrNow" hidden></div>
     <div class="scr-card" id="scrCard" hidden></div>
     <div class="scr-tools"><span class="scr-status" id="scrStatus"></span><button id="fsBtn">На весь экран</button><button id="scrLeave">Закрыть</button></div>
   </div>
@@ -507,12 +547,12 @@ body.screen:not(.fs) .scr-tools{opacity:1}
     </section>
 
     <section><h2><span>Что видят игроки</span></h2>
-      <p>У комнат, героев, монстров, объектов, меток и записей журнала один и тот же переключатель из двух положений:</p>
+      <p>У комнат, героев, монстров, объектов и меток один и тот же переключатель из двух положений:</p>
       <dl>
         <dt>Скрыть</dt><dd>Видит только мастер. Для засад и секретов.</dd>
         <dt>Показать</dt><dd>Видно на экране для игроков.</dd>
       </dl>
-      <p>У мастера рядом с каждой вещью стоит метка: глаз означает «игроки видят», перечёркнутый глаз означает «скрыто». Фишка в скрытой комнате не видна, даже если сама открыта. Проверить себя можно переключателем «Как у игроков» в блоке комнат.</p>
+      <p>У мастера рядом с каждой вещью стоит метка: глаз означает «игроки видят», перечёркнутый глаз означает «скрыто». Фишка в скрытой комнате не видна, даже если сама открыта. Проверить себя можно переключателем «Как у игроков» в блоке комнат. Записи журнала устроены иначе: смотри раздел «Бортовой журнал».</p>
     </section>
 
     <section><h2><span>Чем управляется экран для игроков</span></h2>
@@ -520,20 +560,23 @@ body.screen:not(.fs) .scr-tools{opacity:1}
         <li>«Показать на экране» у комнаты открывает её игрокам, поворачивает к ней экран и выводит карточку с описанием и изменениями.</li>
         <li>«Показать на экране» у объекта выводит карточку с его описанием. Кнопка «Убрать» снимает карточку.</li>
         <li>«Навести экран» просто поворачивает экран к комнате, «Экран: весь план» возвращает общий вид.</li>
-        <li>Галочка «Экран повторяет мою камеру» заставляет экран смотреть туда же, куда смотрит мастер. Сними её, если хочешь спокойно подглядывать в скрытые углы.</li>
+        <li>Слева вверху на экране стоит справка из журнала, внизу подпись «Сейчас» с названием комнаты, на которую наведён экран.</li>
       </ul>
     </section>
 
     <section><h2><span>Фишки и объекты</span></h2>
+      <p>Блок называется «Сущности» и стоит в правой колонке под журналом.</p>
       <ul>
-        <li>Четыре раздела: герои, монстры, объекты и метки. Добавляются кнопками быстрого набора.</li>
+        <li>Над разделами стоит узкая кнопка «Пул». Пул — это шаблоны приключения: герои, монстры, объекты и метки со статами, описаниями и моделями. Он один на все карты приключения.</li>
+        <li>Четыре раздела: герои, монстры, объекты и метки. В каждом кнопка «+ Добавить» открывает шаблоны из пула: выбрал — фишка встала на карту с готовыми статами.</li>
+        <li>Статы, названия, описания и модели правятся только в пуле. Шаблон обновит имя, хиты, урон, особенность и модель у уже стоящих фишек, а текущие хиты, место, видимость, размер и поворот не тронет. Варианты (сильный скелет, слабый, в воде) делай отдельными шаблонами: у каждого есть «Дублировать шаблон».</li>
         <li>Фишки перетаскиваются по карте и встают в центр клетки. Одна клетка равна пяти футам.</li>
         <li>Две фишки в одной клетке не стоят: если место занято, фишка встанет в ближайшую свободную клетку рядом. Колонны, сундуки, столы, бочки, статуи и прочие крупные предметы тоже занимают свои клетки: герой или монстр туда не встанет (объект-подсказка к предмету и метка встают на предмет).</li>
         <li>Клик по фишке на карте открывает её меню: видимость, хиты, фигурка, удаление. Меню появляется сбоку и фишку не закрывает.</li>
         <li>У монстров есть счётчик хитов. Кнопки «−» и «+» меняют его на единицу, с зажатым Shift сразу на пять.</li>
         <li>Объект — это то, на что можно обратить внимание: сундук, рычаг, надпись на стене. Игрокам достаётся описание, мастеру ещё и своя заметка.</li>
-        <li>Фигурку для фишки выбирают в поле «Модель». Размер и поворот у каждой фишки свои: поверни одного мимика, остальные останутся как были.</li>
-        <li>Блок с фишками разворачивается на весь экран кнопкой с рамкой в заголовке.</li>
+        <li>В меню фишки остаются модель, размер и поворот: они у каждой фишки свои. Поверни одного мимика, остальные останутся как были.</li>
+        <li>Блок разворачивается на весь экран кнопкой с рамкой в заголовке.</li>
       </ul>
     </section>
 
@@ -555,16 +598,22 @@ body.screen:not(.fs) .scr-tools{opacity:1}
       <ul>
         <li>«ИГРА» — спокойный режим. В очереди стоят герои, раунды считаются, таймер можно включить по желанию.</li>
         <li>«БОЙ» — нажми на блок, и откроется окно подготовки. Расставь участников по порядку: перетащи за точки слева, подвинь стрелками или впиши инициативу и нажми «По инициативе». Кубик бросит к20 за всех монстров разом. Галочка справа убирает участника из боя.</li>
-        <li>Там же настраивается таймер хода: сколько времени, для кого считать (только герои, все или никто) и что делать, когда время вышло (подать сигнал или сразу передать ход).</li>
-        <li>«Начать бой» запускает первый раунд. «Завершить ход» передаёт ход дальше, не дожидаясь таймера. Есть пауза и шаг назад, если поторопился.</li>
-        <li>Монстр с нулём хитов зачёркивается, и очередь его пропускает.</li>
-        <li>Если включена запись в журнал, туда сами попадают начало и конец боя, раунды, время ходов и павшие монстры.</li>
+        <li>Там же настраивается таймер хода: сколько времени и для кого считать (только герои, все или никто).</li>
+        <li>«Начать бой» запускает первый раунд. «Завершить ход» передаёт ход дальше, и таймер следующего хода стартует сразу. Есть пауза и шаг назад, если поторопился.</li>
+        <li>Когда время хода вышло, звучит сигнал и ход переходит дальше сам. Но таймер следующего хода сам не запускается: он ждёт твоей кнопки «Запустить таймер». Игрокам в это время на экране написано «Приключенец растерялся. Боги решат его судьбу...».</li>
+        <li>Монстр с нулём хитов зачёркивается, и очередь его пропускает. Когда все монстры боя повержены или убраны, бой сам заканчивается и игра продолжается. Если рано, нажми «Вернуться в бой».</li>
+        <li>Если включена запись в журнал, в «Хронику» сами попадают начало и конец боя, раунды, время ходов и павшие монстры.</li>
         <li>Игроки видят на экране ту же ленту, плашку «БОЙ · раунд» и крупный таймер. Хиты монстров им не показываются, а скрытый участник значится как «Некто».</li>
       </ul>
     </section>
 
     <section><h2><span>Бортовой журнал</span></h2>
-      <p>Хроника игры, которую ведёт мастер. Каждую запись можно показать игрокам или скрыть. Последняя показанная запись мастера выводится на экран строкой сверху.</p>
+      <p>Журнал мастера делится на вкладки, у каждой своё окно ввода.</p>
+      <dl>
+        <dt>Хроника</dt><dd>Системный лог (раунды, ходы, павшие монстры) и твои записи о ходе игры. Видишь только ты.</dd>
+        <dt>Справка</dt><dd>Записи для игроков. Они стоят слева вверху на экране: сверху название приключения, ниже рамка с разделами. «Общая» остаётся на всех картах, запись с названием карты видна только на ней. Записи можно править и удалять.</dd>
+        <dt>Заметки</dt><dd>Личные заметки мастера. На экран игроков не попадают.</dd>
+      </dl>
     </section>
 
     <section><h2><span>Переход на другую карту</span></h2>
@@ -846,7 +895,7 @@ const newCb=()=>({mode:'game',t:null,
   game:{list:[],cur:null,round:1,run:true,sec:60,tFor:'none',tEnd:'signal',log:false},
   fight:{list:[],cur:null,round:1,run:false,sec:60,tFor:'hero',tEnd:'signal',log:true}});
 const S={role:SCREEN?'screen':'dm',view:SCREEN?'players':'dm',roomVis:{},revealed:[],focus:null,current:null,tokens:new Map(),log:[],edits:{},show:null,card:null,cb:newCb(),pub:null};
-const UI={edit:null,openTok:new Set(),presetEdit:false,tokEdit:null,tab:null,pop:null,openLog:null,logVis:'all',logText:'',tokTab:'hero',follow:LS('dnd-follow')==='1',setup:null,cbShift:0};
+const UI={edit:null,openTok:new Set(),tokEdit:null,tab:null,pop:null,logTab:'chron',refSec:'gen',entryEdit:null,drafts:{},tokTab:'hero',addOpen:null,pool:null,setup:null,cbShift:0};
 const DEFAULT_PRESETS=[
   {name:'Скелет',kind:'monster',hp:13,dmg:'1к6+2 колющий',feat:'Уязвим к дробящему'},
   {name:'Зомби',kind:'monster',hp:22,dmg:'1к6+1 дробящий',feat:'Стойкость нежити: Тел Сл 5+урон, остаётся с 1 хитом'},
@@ -854,7 +903,6 @@ const DEFAULT_PRESETS=[
   {name:'Мимик',kind:'monster',hp:58,dmg:'1к8+3 дробящий, укус +1к8 кислотой',feat:'Липкий: схваченный, Сл 13'},
   {name:'Босс',kind:'monster',hp:45,dmg:'4к6 некротический',feat:''}
 ];
-let presets=LSJ('dnd-presets',null)||MAP.presets||DEFAULT_PRESETS;
 const OBJ_COLOR='#f2d16b';
 /* 3D-модели: каталог в models/models.js, у сущности поле model = id из каталога */
 const MODELS=[...(ADV.models||[]),...(CAT.models||[]).filter(m=>!(ADV.models||[]).some(a=>a.id===m.id))], modelCache={};   /* свои модели приключения + общая библиотека */
@@ -1008,10 +1056,96 @@ function patchToken(id,patch){
 }
 const canMove=t=>isDM();
 
+/* ---------- Пул: шаблоны сущностей приключения (один на все карты) ---------- */
+const POOL_KINDS=[['hero','Герои'],['monster','Монстры'],['object','Объекты'],['mark','Метки']];
+function poolDefault(){
+  const old=LSJ('dnd-presets',null)||MAP.presets||DEFAULT_PRESETS, p=[{id:'d-hero',kind:'hero',name:'Герой'}];
+  old.forEach((x,i)=>p.push({id:'d-m'+i,kind:x.kind==='hero'?'hero':'monster',name:x.name,hp:x.hp||10,dmg:x.dmg||'',feat:x.feat||''}));
+  p.push({id:'d-obj',kind:'object',name:'Объект',text:'',note:''},{id:'d-mark',kind:'mark',name:'Метка',shape:'circle',size:2,color:MARK_COLORS[0]});
+  return p;
+}
+let pool=LSJ(AK('pool'),null);
+if(!Array.isArray(pool)){pool=poolDefault();if(!SCREEN)LS(AK('pool'),JSON.stringify(pool))}
+const savePool=()=>{LS(AK('pool'),JSON.stringify(pool));LS(AK('touched'),String(Date.now()))};
+const tplOf=d=>d&&d.pid?pool.find(p=>p.id===d.pid):null;
+/* предметы карты попадают в пул сами, чтобы их тоже правили в одном месте */
+function poolObject(o){
+  let p=pool.find(x=>x.kind==='object'&&x.name===o.name&&x.src===MAP.id);
+  if(!p){p={id:'p'+uid(),kind:'object',name:o.name,text:o.text||'',note:o.dm||'',model:o.model||null,src:MAP.id};pool.push(p);savePool()}
+  return p.id;
+}
+function newTemplate(kind){
+  const id='p'+uid();
+  return kind==='hero'?{id,kind,name:'Новый герой'}
+    :kind==='monster'?{id,kind,name:'Новый монстр',hp:10,dmg:'',feat:''}
+    :kind==='object'?{id,kind,name:'Новый объект',text:'',note:''}
+    :{id,kind,name:'Новая метка',shape:'circle',size:2,color:MARK_COLORS[0]};
+}
+/* правка шаблона обновляет имя, хиты (максимум), урон, особенность, текст и модель у уже стоящих фишек; текущие хиты, место, видимость, размер и поворот остаются */
+function poolApply(p,oldName){
+  S.tokens.forEach(t=>{const d=t.data; if(d.pid!==p.id)return;
+    const patch={base:p.name};
+    if(d.name===oldName||d.name.startsWith(oldName+' '))patch.name=p.name+d.name.slice(oldName.length);
+    if(p.kind!=='mark')patch.model=p.model||null;
+    if(p.kind==='monster'){patch.hpMax=Math.max(1,+p.hp||1);patch.hp=Math.min(d.hp,patch.hpMax);patch.dmg=p.dmg||'';patch.feat=p.feat||''}
+    if(p.kind==='object'){patch.text=p.text||'';patch.note=p.note||''}
+    patchToken(t.id,patch)});
+  savePool();
+}
+function openPool(tab,focus){UI.pool={tab:tab||(UI.pool&&UI.pool.tab)||'monster',focus:focus||null,open:focus||null};renderPool()}
+function closePool(){UI.pool=null;renderPool()}
+function modelPick(kind,val,fn){
+  const ms=h('select',{'aria-label':'3D-модель',onchange:e=>fn(e.target.value||null)},h('option',{value:'',text:kind==='object'?'нет, маркер':'нет, обычная фишка'}),
+    MODELS.filter(m=>!m.kind||m.kind===kind||m.id===val).map(m=>h('option',{value:m.id,text:m.name||m.id})));
+  ms.value=val||''; return ms;
+}
+function poolCard(p,used){
+  const det=h('details',{class:'pcard'}); det.open=UI.pool.open===p.id;
+  det.addEventListener('toggle',()=>{if(det.open)UI.pool.open=p.id;else if(UI.pool.open===p.id)UI.pool.open=null});
+  det.append(h('summary',{},h('b',{text:p.name}),h('span',{class:'cnt',text:p.kind==='monster'?'хиты '+p.hp:''}),h('span',{class:'cnt',text:used?'на картах: '+used:''})));
+  const f=(label,el,top)=>h('label',{class:'f'+(top?' top':'')},h('span',{class:'lbl',text:label}),el);
+  const inp=(key,type,ph)=>h('input',{type,placeholder:ph||'','aria-label':ph||key,value:p[key]==null?'':p[key],min:type==='number'?'1':null,
+    onchange:e=>{const old=p.name,v=type==='number'?Math.max(1,+e.target.value||1):e.target.value.trim();
+      if(key==='name'&&!v){e.target.value=old;return}
+      p[key]=v; if(type==='number')e.target.value=v; poolApply(p,old); if(key==='name')det.querySelector('summary b').textContent=p.name}});
+  const area=(key,ph)=>h('textarea',{placeholder:ph,'aria-label':ph,value:p[key]||'',onchange:e=>{p[key]=e.target.value.trim();poolApply(p,p.name)}});
+  const body=h('div',{class:'pbody'},f('Название',inp('name','text','Название')));
+  if(p.kind==='monster')body.append(f('Хиты',inp('hp','number','Хиты')),f('Урон',inp('dmg','text','Урон')),f('Особенность',inp('feat','text','Особенность')));
+  if(p.kind==='object')body.append(f('Игрокам',area('text','Что узнают игроки'),true),f('Мастеру',area('note','Заметка мастера: что внутри, какая проверка'),true));
+  if(p.kind==='mark'){
+    body.append(f('Форма',seg(MARK_SHAPES,p.shape||'circle',v=>{p.shape=v;savePool();renderPool()},'Форма метки','mini')),
+      f('Размер, клеток',inp('size','number','Размер')),
+      f('Цвет',h('div',{class:'swatches'},MARK_COLORS.map(c=>{const b=h('button',{'aria-pressed':String(c===p.color),'aria-label':'Цвет '+c,onclick:()=>{p.color=c;savePool();renderPool()}});b.style.setProperty('--c',c);return b}))));
+  }else body.append(f('Модель',modelPick(p.kind,p.model,v=>{p.model=v;poolApply(p,p.name)})));
+  body.append(h('div',{class:'row'},
+    h('button',{class:'small',text:'Дублировать шаблон',title:'Копия для варианта: сильный скелет, слабый, в воде',onclick:()=>{const c=JSON.parse(JSON.stringify(p));c.id='p'+uid();c.name=p.name+' (копия)';pool.splice(pool.indexOf(p)+1,0,c);savePool();UI.pool.open=c.id;renderPool()}}),
+    h('span',{style:'flex:1'}),
+    h('button',{class:'small danger',text:'Удалить шаблон',title:'Фишки, уже созданные по нему, останутся на картах',onclick:()=>{pool=pool.filter(x=>x!==p);savePool();renderPool()}})));
+  det.append(body); return det;
+}
+function renderPool(){
+  const el=$('poolWin'), P=UI.pool;
+  if(!P||!isDM()){el.hidden=true;el.innerHTML='';return}
+  el.hidden=false; el.innerHTML='';
+  const tab=P.tab, list=pool.filter(p=>p.kind===tab), used=p=>[...S.tokens.values()].filter(t=>t.data.pid===p.id).length;
+  el.onclick=e=>{if(e.target===el)closePool()};
+  const card=h('div',{class:'poolcard',role:'dialog','aria-label':'Пул приключения'});
+  card.append(h('header',{},h('div',{},h('h2',{text:'Пул'}),h('small',{text:ADV.title+' · шаблоны для всех карт приключения'})),h('span',{style:'flex:1'}),
+      h('button',{class:'icon',text:'×','aria-label':'Закрыть',style:'font-size:26px',onclick:closePool})),
+    seg(POOL_KINDS.map(([k,t])=>[k,t+' · '+pool.filter(p=>p.kind===k).length]),tab,v=>{UI.pool={tab:v,focus:null,open:null};renderPool()},'Раздел пула','tabs3'),
+    h('p',{class:'note',text:'Здесь настраиваются шаблоны до игры. Правка шаблона обновит имя, хиты, урон, особенность и модель у уже стоящих фишек, но не тронет текущие хиты, место, видимость, размер и поворот.'}));
+  const body=h('div',{class:'poollist'});
+  list.forEach(p=>body.append(poolCard(p,used(p))));
+  if(!list.length)body.append(h('p',{class:'note',text:'В этом разделе пока нет шаблонов.'}));
+  body.append(h('div',{class:'row'},h('button',{class:'primary small',text:'+ Новый шаблон',onclick:()=>{const t=newTemplate(tab);pool.push(t);savePool();UI.pool.open=t.id;renderPool()}})));
+  card.append(body); el.append(card);
+  if(P.focus){const d=body.querySelector('details[open]');if(d)setTimeout(()=>d.scrollIntoView({block:'nearest'}),0);P.focus=null}
+}
+
 /* ---------- Экран для игроков: второе окно этого же браузера. Ни серверов, ни интернета ---------- */
 const chan=('BroadcastChannel' in window)?new BroadcastChannel('dnd-screen:'+ADV.id):null;
 const post=m=>{if(chan)try{chan.postMessage(m)}catch(e){}};
-let screenSeen=0, scrWas=false, lastFocusAt=null, gotState=false, camGoal=null, camSent='', camAt=0;
+let screenSeen=0, scrWas=false, lastFocusAt=null, gotState=false;
 const screenOn=()=>Date.now()-screenSeen<6000;
 function setStatus(kind,text){
   const el=$('status'); el.className='status '+kind; el.querySelector('span').textContent=text;
@@ -1037,9 +1171,9 @@ function viewState(){
     if(d.kind==='mark'){o.shape=d.shape;o.size=d.size;o.rot=d.rot||0}
     tokens[t.id]=o});
   const edits={}; Object.entries(S.edits).forEach(([n,e])=>{const o={};if(e.read!=null)o.read=e.read;if(e.change!=null)o.change=e.change;edits[n]=o});
-  const last=S.log.find(e=>shown(e)&&!e.auto);
-  return {adv:ADV.id,map:MAP.id,revealed:ROOMS.map(r=>r.n).filter(roomOpen),focus:S.focus,follow:UI.follow,tokens,edits,
-    log:last?[{id:last.id,text:last.text,at:last.at}]:[],card:showCard(),cb:cbView(true)};
+  const refList=sec=>S.log.filter(e=>tabOf(e)==='ref'&&(e.sec||'gen')===sec).reverse().map(e=>({id:e.id,text:e.text}));
+  return {adv:ADV.id,map:MAP.id,revealed:ROOMS.map(r=>r.n).filter(roomOpen),focus:S.focus,tokens,edits,
+    ref:{gen:refList('gen'),map:refList(MAP.id)},card:showCard(),cb:cbView(true)};
 }
 /* Партия общая для всех карт приключения: герои, их очередь в «игре» и журнал.
    Монстры, объекты, метки, бой, видимость комнат и правки текстов хранятся отдельно у каждой карты. */
@@ -1056,7 +1190,7 @@ function importSave(){
   if(sv.at<=(+LS(AK('touched'))||0))return false;
   Object.entries(sv.maps||{}).forEach(([m,st])=>LS(AK(m+':state3'),JSON.stringify(st)));
   if(sv.party)LS(AK('party'),JSON.stringify(sv.party));
-  if(Array.isArray(sv.presets)&&!LS('dnd-presets')){presets=sv.presets;LS('dnd-presets',JSON.stringify(presets))}
+  if(Array.isArray(sv.pool)){pool=sv.pool;LS(AK('pool'),JSON.stringify(pool))}
   if(sv.modelCfg){modelCfg={...modelCfg,...sv.modelCfg};LS('dnd-modelcfg',JSON.stringify(modelCfg))}
   LS(AK('touched'),String(sv.at)); return true;
 }
@@ -1064,7 +1198,7 @@ function importSave(){
 function exportSave(){
   persist();
   const maps={}; ADV.maps.forEach(m=>{const st=LSJ(AK(m.id+':state3'),null);if(st)maps[m.id]=st});
-  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),presets,maps};
+  const at=Date.now(), sv={adv:ADV.id,at,current:MAP.id,party:LSJ(AK('party'),null),pool,maps};
   LS(AK('touched'),String(at));
   const d=new Date(at), stamp=d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
   const out='/* Сохранение приключения «'+ADV.title+'» от '+stamp+'. Положи этот файл в папку adventures/'+ADV.id+' вместо старого. */\nwindow.SAVE = '+JSON.stringify(sv)+';\n';
@@ -1109,7 +1243,7 @@ function loadLocal(){
   if(st){loadFull(st);adoptParty();return}
   S.roomVis=defaultRoomVis(); S.log=[]; S.edits={}; S.show=null; S.cb=newCb();
   (MAP.tokens||[]).forEach(d=>{if(d&&typeof d.x==='number')upsertToken('t'+uid(),normVis({vis:'all',...d}))});
-  (MAP.objects||[]).forEach(o=>upsertToken('t'+uid(),{name:o.name,kind:'object',color:OBJ_COLOR,x:o.at[0],z:o.at[1],vis:o.vis==='none'?'none':'all',text:o.text||'',note:o.dm||'',model:o.model||null}));
+  (MAP.objects||[]).forEach(o=>upsertToken('t'+uid(),{pid:poolObject(o),name:o.name,kind:'object',color:OBJ_COLOR,x:o.at[0],z:o.at[1],vis:o.vis==='none'?'none':'all',text:o.text||'',note:o.dm||'',model:o.model||null}));
   adoptParty();
 }
 /* окно игроков получает от мастера готовую картинку мира */
@@ -1117,13 +1251,12 @@ function applyRemote(st){
   if(followMap(st.map,st.adv))return;
   gotState=true; setStatus('live','Экран для игроков');
   S.revealed=Array.isArray(st.revealed)?st.revealed:[];
-  S.edits=st.edits||{}; S.log=st.log||[]; S.card=st.card||null; S.pub=st.cb||null;
-  UI.follow=!!st.follow; if(!UI.follow)camGoal=null;
+  S.edits=st.edits||{}; S.ref=st.ref||{gen:[],map:[]}; S.card=st.card||null; S.pub=st.cb||null;
   const seen=new Set(Object.keys(st.tokens||{}));
   [...S.tokens.keys()].forEach(id=>{if(!seen.has(id))removeToken(id)});
   Object.entries(st.tokens||{}).forEach(([id,d])=>{if(d&&typeof d.x==='number')upsertToken(id,d)});
   const f=st.focus||null;
-  if(f&&f.at!==lastFocusAt&&!UI.follow)goFocus(f);
+  if(f&&f.at!==lastFocusAt)goFocus(f);
   lastFocusAt=f?f.at:0; S.focus=f;
   if(S.current&&!S.revealed.includes(S.current.n))S.current=null;
   refreshAll();
@@ -1132,21 +1265,16 @@ function openScreen(){
   const w=window.open(mapUrl(MAP.id)+'&screen=1','dnd-screen','popup=yes,width=1280,height=720');
   if(!w)setStatus('warn','Браузер не дал открыть окно. Разреши всплывающие окна для этого сайта и нажми ещё раз.');
 }
-function sendCam(force){
-  const p=camera.position, t=controls.target, r=n=>Math.round(n*100)/100, key=[r(p.x),r(p.y),r(p.z),r(t.x),r(t.y),r(t.z)].join();
-  if(!force&&key===camSent)return; camSent=key; post({type:'cam',p:[p.x,p.y,p.z],t:[t.x,t.y,t.z]});
-}
 function checkScreen(){const on=screenOn();if(on!==scrWas){scrWas=on;renderSession()}}
 if(chan)chan.onmessage=ev=>{
   const m=ev.data; if(!m)return;
   if(isDM()){
-    if(m.type==='hello'){screenSeen=Date.now();broadcast();if(UI.follow)sendCam(true);checkScreen()}
+    if(m.type==='hello'){screenSeen=Date.now();broadcast();checkScreen()}
     else if(m.type==='ping'){screenSeen=Date.now();checkScreen()}
     else if(m.type==='bye'){screenSeen=0;checkScreen()}
   }else{
     if(m.type==='goto')followMap(m.map,m.adv);
     else if(m.type==='state')applyRemote(m.state);
-    else if(m.type==='cam'){if(UI.follow){camGoal={t:new THREE.Vector3(...m.t),p:new THREE.Vector3(...m.p)};fly=null}}
     else if(m.type==='beep')beep();
   }
 };
@@ -1156,7 +1284,10 @@ function screenBoot(){
   setInterval(()=>post({type:gotState?'ping':'hello'}),2000);
   addEventListener('pagehide',()=>post({type:'bye'}));
 }
-function addLog(text,vis){S.log=[{id:uid(),text,at:Date.now(),vis:vis==='none'?'none':'all'},...S.log].slice(0,200);refreshAll();changed()}
+/* журнал: вкладки Хроника (системный лог и свои записи мастера), Справка (видят игроки, раздел «Общая» или карта), Заметки (только мастеру) */
+const tabOf=e=>e.tab||'chron';
+function trimLog(){let n=0;S.log=S.log.filter(e=>tabOf(e)!=='chron'||++n<=300)}
+function addEntry(text,tab,sec){S.log=[{id:uid(),text,at:Date.now(),tab,...(tab==='ref'?{sec}:{})},...S.log];trimLog();refreshAll();changed()}
 let actx=null;
 function beep(){
   try{actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const t=actx.currentTime;
@@ -1173,11 +1304,11 @@ const cbDownE=e=>{const t=cbTok(e);return !t||(t.data.kind==='monster'&&t.data.h
 const cbAlive=e=>e.in&&!cbDownE(e);
 const cbName=id=>{const t=S.tokens.get(id);return t?t.data.name:'?'};
 const cbVis=id=>{const t=S.tokens.get(id);return t&&tokenOpen(t.data)?'all':'none'};
-function logLine(text,vis){S.log=[{id:uid(),text,at:Date.now(),vis:vis||'all',auto:true},...S.log].slice(0,200)}
+function logLine(text){S.log=[{id:uid(),text,at:Date.now(),tab:'chron',auto:true},...S.log];trimLog()}
 function cbTimed(M,id){const t=S.tokens.get(id);return !!t&&(M.tFor==='all'||(M.tFor==='hero'&&t.data.kind==='hero'))}
-function cbStartTurn(){
+function cbStartTurn(wait){
   const M=CB(); M.turnAt=Date.now(); UI.cbShift=0;
-  S.cb.t=M.run&&M.cur&&cbTimed(M,M.cur)?{total:M.sec*1000,endsAt:Date.now()+M.sec*1000,left:null,fired:false}:null;
+  S.cb.t=M.run&&M.cur&&cbTimed(M,M.cur)?(wait?{total:M.sec*1000,endsAt:null,left:M.sec*1000,fired:false,wait:true}:{total:M.sec*1000,endsAt:Date.now()+M.sec*1000,left:null,fired:false}):null;
 }
 /* добавить в очередь тех, кого в ней ещё нет: героев всегда, монстров — показанных игрокам или всех */
 function cbFill(M,kinds,all){
@@ -1187,13 +1318,18 @@ function cbFill(M,kinds,all){
 function cbSync(){
   ['game','fight'].forEach(k=>{const M=S.cb[k]; M.list=M.list.filter(e=>S.tokens.has(e.id))});
   cbFill(S.cb.game,'hero');
+  const F=S.cb.fight;
+  if(S.cb.mode==='fight'&&F.run){   /* все враги боя повержены или убраны: возвращаемся в игру сами */
+    const mon=F.list.filter(e=>{const t=cbTok(e);return t&&t.data.kind==='monster'&&e.in});
+    if(mon.some(e=>!cbDownE(e)))F.hadMon=true; else if(F.hadMon)cbEndFight(true);
+  }
   const M=CB();
   if(M.run&&!M.list.some(e=>e.id===M.cur&&e.in)){const f=M.list.find(cbAlive), id=f?f.id:null; if(id!==M.cur){M.cur=id;cbStartTurn()}}
 }
-function cbNext(dir){
+function cbNext(dir,auto){
   const M=CB(), L=M.list, n=L.length; if(!M.run||!n)return;
   let i=L.findIndex(e=>e.id===M.cur); const from=i, T=S.cb.t;
-  if(M.log&&M.cur&&T&&!T.fired&&dir!==-1)logLine(cbName(M.cur)+': ход занял '+fmt(Date.now()-M.turnAt),cbVis(M.cur));
+  if(M.log&&M.cur&&T&&!T.fired&&!T.wait&&dir!==-1)logLine(cbName(M.cur)+': ход занял '+fmt(Date.now()-M.turnAt),cbVis(M.cur));
   for(let k=0;k<n;k++){
     i+=dir===-1?-1:1;
     if(i>=n){i=0;M.round++;if(M.log)logLine((S.cb.mode==='fight'?'Бой':'Игра')+': раунд '+M.round)}
@@ -1201,34 +1337,41 @@ function cbNext(dir){
     if(cbAlive(L[i]))break;
   }
   M.cur=L[i]&&cbAlive(L[i])?L[i].id:((L.find(cbAlive)||{}).id||null);
-  cbStartTurn(); refreshAll(); changed();
+  cbStartTurn(!!auto); refreshAll(); changed();
 }
 function cbTimeout(){
   const M=CB(), T=S.cb.t; if(!T||T.fired||!T.endsAt||Date.now()<T.endsAt)return;
   T.fired=true; beep(); post({type:'beep'});
   if(M.log)logLine(cbName(M.cur)+': время вышло',cbVis(M.cur));
-  if(M.tEnd==='pass')cbNext(); else{refreshAll();changed()}
+  cbNext(1,true);   /* ход передан сам, а следующий таймер ждёт мастера */
 }
 function cbPause(){
   const T=S.cb.t; if(!T)return;
-  if(T.endsAt){T.left=Math.max(0,T.endsAt-Date.now());T.endsAt=null}else{T.endsAt=Date.now()+(T.left||0);T.left=null}
+  if(T.endsAt){T.left=Math.max(0,T.endsAt-Date.now());T.endsAt=null}else{T.endsAt=Date.now()+(T.left||0);T.left=null;T.wait=false}
   refreshAll(); changed();
 }
 function cbStartFight(){
   const F=S.cb.fight, first=F.list.find(cbAlive); if(!first)return;
-  S.cb.mode='fight'; F.run=true; F.round=1; F.began=Date.now(); F.cur=first.id;
+  S.cb.mode='fight'; F.run=true; F.round=1; F.began=Date.now(); F.cur=first.id; F.autoEnded=null;
+  F.hadMon=F.list.some(e=>{const t=cbTok(e);return cbAlive(e)&&t&&t.data.kind==='monster'});
   if(F.log)logLine('⚔ Бой начался. Порядок: '+F.list.filter(e=>cbAlive(e)&&cbVis(e.id)==='all').map(e=>cbName(e.id)).join(', '));
   cbStartTurn(); UI.setup=null; refreshAll(); changed();
 }
-function cbEndFight(){
+function cbEndFight(auto){
   const F=S.cb.fight; if(!F.run)return;
-  if(F.log)logLine('Бой окончен. Раундов: '+F.round+', длился '+fmt(Date.now()-(F.began||Date.now())));
-  F.run=false; F.cur=null; S.cb.mode='game'; cbStartTurn(); UI.setup=null; refreshAll(); changed();
+  if(F.log||auto)logLine('Бой окончен'+(auto===true?': врагов не осталось':'')+'. Раундов: '+F.round+', длился '+fmt(Date.now()-(F.began||Date.now())));
+  F.run=false; F.cur=null; F.hadMon=false; F.autoEnded=auto===true?{round:F.round}:null; S.cb.mode='game'; cbStartTurn(); UI.setup=null;
+  if(auto===true)setTimeout(()=>{refreshAll();changed()},0); else{refreshAll();changed()}
+}
+function cbResumeFight(){
+  const F=S.cb.fight; if(F.run)return;
+  S.cb.mode='fight'; F.run=true; F.autoEnded=null; F.hadMon=false; F.cur=(F.list.find(cbAlive)||{}).id||null;
+  logLine('Возвращаемся в бой. Раунд '+F.round); cbStartTurn(); refreshAll(); changed();
 }
 function cbDown(t){
   const F=S.cb.fight; if(S.cb.mode!=='fight'||!F.run||!F.list.some(e=>e.id===t.id&&e.in))return;
   if(F.log)logLine(t.data.name+' повержен',cbVis(t.id));
-  if(F.cur===t.id)setTimeout(()=>cbNext(),0);
+  if(F.cur===t.id)setTimeout(()=>{if(S.cb.mode==='fight'&&F.run&&F.cur===t.id)cbNext()},0);
 }
 /* картинка очереди: у мастера полная, для игроков без хитов, инициативы и имён скрытых участников */
 function cbView(pub){
@@ -1240,7 +1383,7 @@ function cbView(pub){
       :{id:e.id,name:d.name,color:d.color,kind:d.kind,down,...(pub?{}:{ini:e.ini,hp:d.hp,hpMax:d.hpMax,hid})});
   });
   const T=S.cb.t;
-  return {mode:S.cb.mode,run:M.run,round:M.round,act,cells,t:T&&M.run&&act>=0?{total:T.total,endsAt:T.endsAt,left:T.left}:null};
+  return {mode:S.cb.mode,run:M.run,round:M.round,act,cells,t:T&&M.run&&act>=0?{total:T.total,endsAt:T.endsAt,left:T.left,wait:!!T.wait}:null};
 }
 const cbEl=$('cb'), cbMain=h('div',{class:'cbmain'}), cbSetup=h('div',{class:'setup',hidden:true}); cbEl.append(cbMain,cbSetup);
 let dragRow=null;
@@ -1269,7 +1412,7 @@ function renderCb(){
     V.cells.forEach((c,i)=>track.append(cell(c,i,'next')));
   }
   const strip=h('div',{class:'strip'},
-    !n&&h('p',{class:'hint',text:'Очередь ходов пуста. Добавь героев в блоке «Фишки и объекты»: они встанут сюда сами.'}),
+    !n&&h('p',{class:'hint',text:'Очередь ходов пуста. Добавь героев в блоке «Сущности»: они встанут сюда сами.'}),
     !tv&&n>0&&h('button',{class:'arr l','aria-label':'Прокрутить ленту назад',onclick:()=>{UI.cbShift--;renderCb()}},h('b',{text:'◀'})),
     !tv&&n>0&&h('button',{class:'arr r','aria-label':'Прокрутить ленту вперёд',onclick:()=>{UI.cbShift++;renderCb()}},h('b',{text:'▶'})),track);
   const tlabel=()=>h('span',{class:'tlabel'},'Ход · ',h('b',{text:cur?cur.name:''}));
@@ -1277,10 +1420,11 @@ function renderCb(){
   const stack=h('div',{class:'cbstack'});
   if(tv)stack.append(h('div',{class:'plate '+(fight?'fight':'')},fight?'БОЙ':'ИГРА',h('small',{text:'раунд '+V.round})));
   else{
-    if(cur)stack.append(h('div',{class:'turn'},h('div',{class:'tleft'},tlabel(),T&&clock()),
-      h('div',{class:'tbtns'},h('button',{class:'go',text:'Завершить ход ▶',onclick:()=>cbNext()}),
+    if(cur)stack.append(h('div',{class:'turn'},h('div',{class:'tleft'},tlabel(),T&&clock(),T&&T.wait&&h('span',{class:'tnote',text:'Время вышло, ход передан. Таймер ждёт тебя'})),
+      h('div',{class:'tbtns'},h('button',{class:'go',text:'Завершить ход ▶',title:'Передать ход; таймер следующего стартует сразу',onclick:()=>cbNext()}),
         h('div',{},h('button',{text:'↩ Назад',title:'Вернуть ход предыдущему',onclick:()=>cbNext(-1)}),
-          T&&h('button',{text:T.endsAt?'⏸ Пауза':'▶ Дальше',onclick:cbPause})))));
+          T&&h('button',{class:T.wait?'go':'',text:T.wait?'▶ Запустить таймер':T.endsAt?'⏸ Пауза':'▶ Дальше',onclick:cbPause})))));
+    if(S.cb.fight.autoEnded&&!S.cb.fight.run)stack.append(h('button',{class:'resume',text:'⚔ Бой окончен. Вернуться в бой',title:'Продолжить бой с того же раунда',onclick:cbResumeFight}));
     const G=S.cb.game, F=S.cb.fight;
     stack.append(h('div',{class:'mode',role:'group','aria-label':'Режим'},
       h('button',{class:(fight?'':'on')+(UI.setup==='game'?' open':''),title:'Очередь и таймер игры',onclick:()=>openSetup('game')},'ИГРА',!fight&&h('small',{text:'раунд '+G.round})),
@@ -1288,7 +1432,7 @@ function renderCb(){
   }
   if(n&&V.act>=0)stack.append(h('div',{class:'ptr'}));
   cbMain.innerHTML='';
-  if(tv&&T&&cur)cbMain.append(h('div',{class:'tvtimer'},tlabel(),clock()));
+  if(tv&&T&&cur)cbMain.append(T.wait?h('div',{class:'tvtimer wait'},tlabel(),h('span',{class:'twait',text:'Приключенец растерялся. Боги решат его судьбу...'})):h('div',{class:'tvtimer'},tlabel(),clock()));
   cbMain.append(stack,strip);
   const a=track.querySelector('.act')||track.querySelector('.cell');
   if(a)track.style.transform='translateX('+(strip.clientWidth/2-(a.offsetLeft+a.offsetWidth/2)-UI.cbShift*(a.offsetWidth+6))+'px)';
@@ -1334,7 +1478,7 @@ function renderSetup(){
         ?seg([['hero','Героев'],['all','Всех'],['none','Никого']],M.tFor,v=>{M.tFor=v;retime()},'Для кого таймер','mini sea')
         :seg([['none','Выключен'],['all','Включён']],M.tFor==='none'?'none':'all',v=>{M.tFor=v;retime()},'Таймер','mini sea')),
       M.tFor!=='none'&&h('div',{class:'line'},'Время',h('span',{class:'num'},h('button',{text:'−','aria-label':'Меньше времени',onclick:()=>step(-15)}),h('b',{text:fmt(M.sec*1000)}),h('button',{text:'+','aria-label':'Больше времени',onclick:()=>step(15)}))),
-      M.tFor!=='none'&&h('div',{class:'line'},'Время вышло',seg([['signal','Сигнал'],['pass','Передать ход']],M.tEnd,v=>{M.tEnd=v;upd()},'Когда время вышло','mini sea'))),
+      M.tFor!=='none'&&h('p',{class:'note',text:'Когда время выйдет, прозвучит сигнал и ход перейдёт дальше сам. Таймер следующего хода ждёт твоей кнопки «Запустить таймер»; после «Завершить ход» он стартует сразу.'})),
     h('div',{class:'sec'},h('label',{class:'check'},h('input',{type:'checkbox',checked:M.log,onchange:ev=>{M.log=ev.target.checked;changed()}}),
       h('span',{text:fight?'Записывать в журнал: начало и конец боя, раунды, время ходов, павших':'Записывать в журнал раунды и время ходов'}))),
     fight?(M.run?h('button',{class:'start calm',text:'ЗАКОНЧИТЬ БОЙ',onclick:cbEndFight})
@@ -1383,7 +1527,7 @@ function visControl(o,onChange,label){
 
 /* --- блок экрана и сохранения --- */
 let savedStamp=null;
-const VERSION='12.11-2';   /* метка сборки: по ней видно, какая версия движка открыта */
+const VERSION='12.11-3';   /* метка сборки: по ней видно, какая версия движка открыта */
 const saveBtn=()=>h('button',{class:'small primary',text:'Выгрузить сохранение',title:'Скачать save.js: все карты приключения, фишки, видимость, журнал',onclick:()=>{savedStamp=exportSave();renderSession()}});
 const saveNote=()=>savedStamp?h('p',{class:'note',text:'Сохранение от '+savedStamp+' скачано (save.js). Положи его в папку adventures/'+ADV.id+' вместо старого.'}):'';
 const renderSession=panelFn('pSession',()=>{
@@ -1394,8 +1538,6 @@ const renderSession=panelFn('pSession',()=>{
     h('div',{class:'row'},h('button',{class:on?'':'primary',text:on?'Открыть экран заново':'Открыть экран для игроков',onclick:openScreen}),
       h('button',{class:'small',text:'Экран: весь план',title:'Вернуть экрану игроков общий вид карты',onclick:()=>{S.focus={n:0,at:Date.now()};changed()}})),
     !on&&h('p',{class:'note',text:'Откроется второе окно. Перетащи его на телевизор или второй монитор и нажми в нём «На весь экран». Если телевизор показывает то же, что и ноутбук, нажми Win+P и выбери «Расширить».'}),
-    h('label',{class:'check'},h('input',{type:'checkbox',id:'followCam',checked:UI.follow,onchange:e=>{UI.follow=e.target.checked;LS('dnd-follow',UI.follow?'1':null);changed();if(UI.follow)sendCam(true)}}),
-      h('span',{text:'Экран повторяет мою камеру'})),
     card&&h('div',{class:'row'},h('span',{class:'note',style:'flex:1',text:'На экране карточка: '+card.title}),h('button',{class:'small',text:'Убрать',onclick:hideCard})),
     ADV.maps.some(m=>m.id!==MAP.id)&&h('div',{class:'row'},h('span',{class:'lbl',text:'Другая карта'}),
       (()=>{const sel=h('select',{id:'mapSwitch','aria-label':'Перейти на карту',onchange:e=>{UI.mapPick=e.target.value}},h('option',{value:'',text:'выбери карту'}),
@@ -1465,26 +1607,44 @@ const renderRooms=panelFn('pRooms',()=>{
 
 /* --- бортовой журнал --- */
 const timeOf=at=>{const d=new Date(at);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const LOG_TABS=[['chron','Хроника'],['ref','Справка'],['note','Заметки']];
+const LOG_HINT={chron:'Видишь только ты: ход игры (раунды, ходы, павшие монстры) и твои записи.',ref:'Игроки видят эти записи слева вверху на своём экране. Раздел «Общая» остаётся на всех картах, запись с названием карты видна только на ней.',note:'Заметки только для мастера.'};
+const LOG_HOLD={chron:'Что произошло: «Шайлушай нашёл ключ в саркофаге»',ref:'Что игроки должны помнить: «Ключ от склепа носит жрец»',note:'Заметка для себя'};
+const mapTitleOf=id=>{if(id===MAP.id)return MAP.title||id;const m=ADV.maps.find(x=>x.id===id);return m?(m.title||m.id):id};
+function entryEl(e,tab){
+  if(UI.entryEdit===e.id){
+    const ta=h('textarea',{maxlength:'400',value:e.text,'aria-label':'Текст записи'}), sel=tab==='ref'?h('select',{'aria-label':'Раздел справки'},h('option',{value:'gen',text:'Общая'}),
+      h('option',{value:MAP.id,text:mapTitleOf(MAP.id)}),(e.sec&&e.sec!=='gen'&&e.sec!==MAP.id)&&h('option',{value:e.sec,text:mapTitleOf(e.sec)})):null;
+    if(sel)sel.value=e.sec||'gen';
+    setTimeout(()=>ta.focus(),0);
+    return h('div',{class:'entry open'},ta,sel,h('div',{class:'row'},
+      h('button',{class:'primary small',text:'Сохранить',onclick:()=>{e.text=ta.value.trim()||e.text;if(sel)e.sec=sel.value;UI.entryEdit=null;refreshAll();changed()}}),
+      h('button',{class:'small',text:'Отмена',onclick:()=>{UI.entryEdit=null;renderLog()}})));
+  }
+  return h('div',{class:'entry'},
+    h('div',{class:'meta'},h('span',{class:'cnt',text:timeOf(e.at)}),e.auto&&h('span',{class:'auto',text:'авто'}),h('span',{style:'flex:1'}),
+      !e.auto&&h('button',{class:'icon',html:ICON.edit,title:'Править запись','aria-label':'Править запись',onclick:()=>{UI.entryEdit=e.id;renderLog()}}),
+      h('button',{class:'icon',text:'×',title:'Удалить запись','aria-label':'Удалить запись',style:'font-size:20px',onclick:()=>{S.log=S.log.filter(x=>x!==e);refreshAll();changed()}})),
+    h('p',{class:'what',text:e.text}));
+}
 const renderLog=panelFn('pLog',()=>{
   const p=$('pLog'), box=$('logBody'); p.hidden=!isDM(); if(p.hidden)return;
-  box.innerHTML='';
-  const ta=h('textarea',{id:'logText',maxlength:'400',placeholder:'Что произошло: «Шайлушай нашёл ключ в саркофаге»','aria-label':'Запись в журнал',value:UI.logText,
-    oninput:e=>{UI.logText=e.target.value},onkeydown:e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))write()}});
-  const write=()=>{const t=ta.value.trim();if(!t)return;UI.logText='';ta.value='';ta.blur();addLog(t,UI.logVis)};
-  box.append(ta,visControl({vis:UI.logVis},v=>{UI.logVis=v;renderLog()},'Запись для игроков'),
-    h('div',{class:'row'},h('button',{class:'primary',text:'Записать',onclick:write}),h('span',{class:'note',text:'Ctrl+Enter'})));
-  if(!S.log.length){box.append(h('p',{class:'note',text:'Журнал пуст. Записывай сюда ключевые события: последнюю показанную запись игроки видят на своём экране.'}));return}
-  box.append(h('div',{class:'sub'},h('h3',{text:'Записи'}),h('span',{class:'cnt',text:S.log.length})));
-  box.append(h('div',{class:'list'},S.log.map(e=>{
-    const open=UI.openLog===e.id;
-    const el=h('div',{class:'entry click'+(open?' open':'')},
-      h('div',{class:'meta'},h('span',{class:'cnt',text:timeOf(e.at)}),visBadge(shown(e)),e.auto&&h('span',{class:'auto',text:'авто'})),
-      h('p',{class:'what',text:e.text}));
-    el.firstChild.onclick=el.lastChild.onclick=()=>{UI.openLog=open?null:e.id;renderLog()};
-    if(open)el.append(visControl(e,v=>{e.vis=v;refreshAll();changed()},'Запись для игроков'),
-      h('div',{class:'row'},h('button',{class:'small danger',text:'Удалить запись',onclick:()=>{S.log=S.log.filter(x=>x!==e);UI.openLog=null;refreshAll();changed()}})));
-    return el;
-  })));
+  box.innerHTML=''; const tab=UI.logTab, items=S.log.filter(e=>tabOf(e)===tab);
+  box.append(seg(LOG_TABS.map(([k,t])=>[k,t+' · '+S.log.filter(e=>tabOf(e)===k).length]),tab,v=>{UI.logTab=v;UI.entryEdit=null;renderLog()},'Раздел журнала','tabs3'));
+  const ta=h('textarea',{id:'logText',maxlength:'400',placeholder:LOG_HOLD[tab],'aria-label':'Новая запись',value:UI.drafts[tab]||'',
+    oninput:e=>{UI.drafts[tab]=e.target.value},onkeydown:e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))write()}});
+  const write=()=>{const t=ta.value.trim();if(!t)return;UI.drafts[tab]='';ta.value='';ta.blur();addEntry(t,tab,UI.refSec==='gen'?'gen':MAP.id)};
+  box.append(ta);
+  if(tab==='ref')box.append(h('div',{class:'field'},h('span',{class:'lbl',text:'Куда'}),
+    seg([['gen','Общая'],['map',MAP.title||'Эта карта']],UI.refSec==='gen'?'gen':'map',v=>{UI.refSec=v;renderLog()},'Раздел справки','mini sea')));
+  box.append(h('div',{class:'row'},h('button',{class:'primary',text:'Записать',onclick:write}),h('span',{class:'note',text:'Ctrl+Enter'})),h('p',{class:'note',text:LOG_HINT[tab]}));
+  if(!items.length){box.append(h('p',{class:'note',text:'Пока пусто.'}));return}
+  if(tab==='ref'){
+    const secs=[['gen','Общая'],[MAP.id,mapTitleOf(MAP.id)]];
+    items.forEach(e=>{const s=e.sec||'gen';if(!secs.some(x=>x[0]===s))secs.push([s,mapTitleOf(s)])});
+    secs.forEach(([s,title])=>{const L=items.filter(e=>(e.sec||'gen')===s).reverse(); if(!L.length)return;
+      box.append(h('div',{class:'sub'},h('h3',{text:title}),h('span',{class:'cnt',text:s==='gen'||s===MAP.id?'на экране игроков':'другая карта'})),h('div',{class:'list'},L.map(e=>entryEl(e,tab))));});
+  }else box.append(h('div',{class:'sub'},h('h3',{text:'Записи'}),h('span',{class:'cnt',text:items.length})),h('div',{class:'list'},items.map(e=>entryEl(e,tab))));
 });
 
 /* --- фишки и объекты --- */
@@ -1509,18 +1669,18 @@ function spawnCell(roomN){
 }
 function addToken(p){
   const all=[...S.tokens.values()], heroes=all.filter(t=>t.data.kind==='hero').length, marks=all.filter(t=>t.data.kind==='mark').length;
-  const same=all.filter(t=>t.data.base===p.name).length;
+  const same=all.filter(t=>t.data.base===p.name&&t.data.kind===p.kind).length;
   const [x,z]=spawnCell(S.current&&masterView()?S.current.n:0);
-  const d={name:same&&p.kind!=='hero'?p.name+' '+(same+1):p.name,base:p.name,kind:p.kind,x,z,vis:'all',mScale:1,mRot:0,
+  const d={name:same?p.name+' '+(same+1):p.name,base:p.name,kind:p.kind,x,z,vis:'all',mScale:1,mRot:0,
     color:p.kind==='hero'?HERO_COLORS[heroes%HERO_COLORS.length]:p.kind==='object'?OBJ_COLOR:p.kind==='mark'?MARK_COLORS[marks%MARK_COLORS.length]:'#d0624e'};
   if(p.kind==='monster'){d.hpMax=Math.max(1,+p.hp||1);d.hp=d.hpMax;d.dmg=p.dmg||'';d.feat=p.feat||''}
   if(p.kind==='object'){d.text=p.text||'';d.note=p.note||''}
-  if(p.kind==='mark'){d.shape='circle';d.size=2;d.rot=0}
-  if(p.model)d.model=p.model;
+  if(p.kind==='mark'){d.shape=p.shape||'circle';d.size=p.size||2;d.rot=0;if(p.color)d.color=p.color}
+  if(p.model&&p.kind!=='mark')d.model=p.model;
+  if(p.pid)d.pid=p.pid;
   const id='t'+uid(); upsertToken(id,d); UI.tokTab=p.kind; if(p.kind==='object'||p.kind==='mark')UI.openTok.add(id); if(p.kind==='object')UI.tokEdit=id; refreshAll(); changed();
 }
 function flyToToken(id){const t=S.tokens.get(id);if(!t)return;const p=new THREE.Vector3(t.data.x,0,t.data.z);flyTo(p,p.clone().add(new THREE.Vector3(0,7,7)))}
-function savePresets(){LS('dnd-presets',JSON.stringify(presets))}
 function hpCounter(t){
   const d=t.data, step=n=>e=>{e.preventDefault();e.stopPropagation();patchToken(t.id,{hp:Math.max(0,Math.min(d.hpMax,d.hp+(e.shiftKey?n*5:n)))})};
   return h('span',{class:'hp'+(d.hp<=d.hpMax/2?' low':'')},h('button',{text:'−','aria-label':'Минус хит (с Shift минус 5)',onclick:step(-1)}),h('b',{text:d.hp+' / '+d.hpMax}),h('button',{text:'+','aria-label':'Плюс хит',onclick:step(1)}));
@@ -1582,7 +1742,8 @@ function entityMenu(t,inPop){
     }
   }
   body.append(h('div',{class:'row'},!inPop&&h('button',{class:'small',text:'Где',onclick:()=>flyToToken(id)}),
-    h('button',{class:'icon',html:ICON.edit,title:'Редактировать','aria-label':'Редактировать',onclick:()=>{UI.tokEdit=id;refreshAll()}}),
+    tplOf(d)?h('button',{class:'small',text:'Шаблон',title:'Название, хиты, урон, описание и модель правятся в пуле',onclick:()=>openPool(d.kind,d.pid)})
+      :h('button',{class:'icon',html:ICON.edit,title:'Редактировать','aria-label':'Редактировать',onclick:()=>{UI.tokEdit=id;refreshAll()}}),
     h('span',{style:'flex:1'}),h('button',{class:'small danger',text:'Убрать',onclick:()=>{removeToken(id);if(UI.pop&&UI.pop.id===id)UI.pop=null;refreshAll();changed()}})));
   return body;
 }
@@ -1601,40 +1762,32 @@ function tokenRow(t){
   sum.append(visBadge(tokenOpen(d),tokWhy(d)));
   det.append(sum,entityMenu(t,false)); return det;
 }
-const KINDS=[['hero','Герои','Героев пока нет. Добавь кнопкой «+ Герой».'],['monster','Монстры','Монстров пока нет. Добавь из набора выше.'],['object','Объекты','Объектов пока нет. Это то, на что стоит обратить внимание: сундук, рычаг, надпись.'],['mark','Метки','Меток пока нет. Метка показывает область заклинания или ориентир.']];
+const KINDS=[['hero','Герои','Героев пока нет. Нажми «+ Добавить».'],['monster','Монстры','Монстров пока нет. Нажми «+ Добавить» и выбери шаблон из пула.'],['object','Объекты','Объектов пока нет. Это то, на что стоит обратить внимание: сундук, рычаг, надпись.'],['mark','Метки','Меток пока нет. Метка показывает область заклинания или ориентир.']];
+function addRow(kind){
+  const open=UI.addOpen===kind, row=h('div',{class:'addrow'}), where=S.current?'в комнату «'+S.current.name+'»':'у входа';
+  row.append(h('div',{class:'chips'},h('button',{class:'chip primary',text:open?'× Закрыть':'+ Добавить','aria-expanded':String(open),title:'Создать запись из шаблона пула',onclick:()=>{UI.addOpen=open?null:kind;renderTokens()}})));
+  if(open){
+    const L=pool.filter(p=>p.kind===kind);
+    row.append(h('span',{class:'note',text:'Выбери шаблон из пула. Новая фишка встанет '+where+'.'}),
+      h('div',{class:'chips'},L.map(p=>h('button',{class:'chip',text:p.name,title:p.kind==='monster'?'Хиты '+p.hp+(p.dmg?' · '+p.dmg:''):'',onclick:()=>{UI.addOpen=null;addToken({...p,pid:p.id})}})),
+        h('button',{class:'chip',text:'Пустая',title:'Без шаблона',onclick:()=>{UI.addOpen=null;addToken({name:({hero:'Герой',monster:'Монстр',object:'Объект',mark:'Метка'})[kind],kind})}})),
+      !L.length&&h('span',{class:'note',text:'В пуле нет шаблонов этого раздела. Открой «Пул» и добавь.'}));
+  }
+  return row;
+}
 const renderTokens=panelFn('pTokens',()=>{
   const box=$('tokBody'); box.innerHTML='';
   const shown=[...S.tokens.values()].filter(tokenShown), mvw=masterView();
   S.tokens.forEach(t=>{const on=tokenOpen(t.data);t.tag.classList.toggle('off',mvw&&!on);t.vis.hidden=!mvw;if(mvw)fillVis(t.vis,on,tokWhy(t.data),true)});
   ROOMS.forEach(r=>{r.vis.hidden=!mvw;if(mvw)fillVis(r.vis,roomOpen(r.n),null,true)});
-  if(mvw){
-    const where=S.current?'в комнату «'+S.current.name+'»':'у входа';
-    box.append(h('div',{class:'field'},h('span',{class:'lbl',text:'Быстро добавить '+where}),
-      h('div',{class:'chips'},h('button',{class:'chip primary',text:'+ Герой',onclick:()=>{
-          const n=[...S.tokens.values()].filter(t=>t.data.kind==='hero').length+1; addToken({name:'Герой '+n,kind:'hero'})}}),
-        presets.map(p=>h('button',{class:'chip',text:'+ '+p.name,title:p.kind==='monster'?`Хиты ${p.hp} · ${p.dmg||''}`:'',onclick:()=>addToken(p)})),
-        h('button',{class:'chip obj',text:'+ Объект',onclick:()=>addToken({name:'Объект',kind:'object'})}),
-        h('button',{class:'chip mark',text:'+ Метка',title:'Область заклинания или ориентир',onclick:()=>addToken({name:'Метка',kind:'mark'})}),
-        h('button',{class:'chip',text:UI.presetEdit?'Готово':'Настроить набор','aria-pressed':String(UI.presetEdit),onclick:()=>{UI.presetEdit=!UI.presetEdit;renderTokens()}}))));
-    if(UI.presetEdit){
-      const ed=h('div',{class:'list'});
-      presets.forEach((p,i)=>{
-        const f=(key,attrs)=>h('input',{...attrs,value:p[key]==null?'':p[key],onchange:e=>{p[key]=attrs.type==='number'?Math.max(1,+e.target.value||1):e.target.value.trim();savePresets()}});
-        const kind=h('select',{'aria-label':'Тип',onchange:e=>{p.kind=e.target.value;savePresets()}},h('option',{value:'monster',text:'Монстр'}),h('option',{value:'hero',text:'Герой / НИП'})); kind.value=p.kind;
-        ed.append(h('div',{class:'preset'},f('name',{type:'text',placeholder:'Имя','aria-label':'Имя'}),kind,f('hp',{type:'number',min:'1','aria-label':'Хиты',title:'Хиты'}),
-          h('div',{class:'wide'},f('dmg',{type:'text',placeholder:'Урон','aria-label':'Урон'})),
-          h('div',{class:'wide'},f('feat',{type:'text',placeholder:'Особенность','aria-label':'Особенность'}),h('button',{class:'small danger',text:'Удалить',onclick:()=>{presets.splice(i,1);savePresets();renderTokens()}}))));
-      });
-      ed.append(h('div',{class:'row'},h('button',{class:'small primary',text:'+ Новый пресет',onclick:()=>{presets.push({name:'Новый',kind:'monster',hp:10,dmg:'',feat:''});savePresets();renderTokens()}}),
-        h('button',{class:'small',text:'Вернуть стандартный набор',onclick:()=>{presets=JSON.parse(JSON.stringify(MAP.presets||DEFAULT_PRESETS));savePresets();renderTokens()}})));
-      box.append(ed);
-    }
-  }
+  if(mvw)box.append(h('div',{class:'poolbar'},h('button',{class:'poolbtn',text:'Пул',title:'Шаблоны сущностей приключения: статы, описания, модели',onclick:()=>openPool(UI.tokTab)}),
+    h('span',{class:'note',text:'статы и описания правятся в пуле'})));
   const wide=$('pTokens').classList.contains('wide')&&innerWidth>860;
   const section=([kind,title,emptyNote])=>{
     const ts=shown.filter(t=>t.data.kind===kind);
     const sec=h('div',{class:'half'});
     if(wide)sec.append(h('div',{class:'sub'},h('h3',{text:title}),h('span',{class:'cnt',text:ts.length})));
+    if(mvw)sec.append(addRow(kind));
     if(!ts.length)sec.append(h('p',{class:'note',text:emptyNote}));
     const byRoom=new Map(); ts.forEach(t=>{const n=cellRoom(t.data.x,t.data.z);(byRoom.get(n)||byRoom.set(n,[]).get(n)).push(t)});
     [...byRoom.keys()].sort((a,b)=>a-b).forEach(n=>{
@@ -1647,7 +1800,7 @@ const renderTokens=panelFn('pTokens',()=>{
   if(wide)box.append(h('div',{class:'cols3',style:'grid-template-columns:repeat('+Math.max(1,avail.length)+',minmax(0,1fr))'},avail.map(section)));
   else if(avail.length){
     if(!avail.some(([k])=>k===UI.tokTab))UI.tokTab=avail[0][0];
-    box.append(seg(avail.map(([k,title])=>[k,title+' · '+shown.filter(t=>t.data.kind===k).length]),UI.tokTab,v=>{UI.tokTab=v;renderTokens()},'Раздел','tabs3'),
+    box.append(seg(avail.map(([k,title])=>[k,title+' · '+shown.filter(t=>t.data.kind===k).length]),UI.tokTab,v=>{UI.tokTab=v;UI.addOpen=null;renderTokens()},'Раздел','tabs3'),
       section(avail.find(([k])=>k===UI.tokTab)));
   }
   if(!shown.length&&!mvw)box.append(h('p',{class:'note',text:'Мастер ещё не выставил фишки.'}));
@@ -1684,7 +1837,8 @@ function tokenClicked(t,x,y){
 }
 addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
-  if(UI.pop){UI.pop=null;UI.tokEdit=null;renderPop()}
+  if(UI.pool)closePool();
+  else if(UI.pop){UI.pop=null;UI.tokEdit=null;renderPop()}
   else if($('pTokens').classList.contains('wide'))setWide(false);
 });
 function setWide(on){
@@ -1700,11 +1854,15 @@ function renderScreen(){
   const on=remote();
   document.body.classList.toggle('screen',on); $('screenUI').hidden=!on;
   if(!on)return;
-  $('scrRoom').textContent=S.current?S.current.n+'. '+S.current.name:'';
-  const lg=S.log[0], el=$('scrLog'), c=S.card, ce=$('scrCard');
+  const c=S.card, ce=$('scrCard'), now=$('scrNow'), rf=$('scrRef'), R=S.ref||{gen:[],map:[]};
   ce.hidden=!c; ce.innerHTML='';
   if(c)ce.append(h('h3',{text:c.title}),h('p',{text:c.text||'Ничего примечательного.'}),c.change&&h('p',{class:'chg',text:c.change}));
-  el.textContent=lg?lg.text:''; el.hidden=!lg;
+  now.hidden=!!c||!S.current; now.textContent=S.current?'Сейчас · '+S.current.n+'. '+S.current.name:'';
+  rf.innerHTML=''; rf.hidden=!(R.gen.length||R.map.length);
+  if(!rf.hidden){
+    const sec=(t,L)=>L.length&&h('div',{class:'rs'},h('h4',{text:t}),h('ul',{},L.map(x=>h('li',{text:x.text}))));
+    rf.append(h('div',{class:'adv',text:ADV.title}),h('div',{class:'frame'},sec('Общая',R.gen),sec(MAP.title||'Карта',R.map)));
+  }
 }
 function renderTabs(){
   const nav=$('tabs'); nav.innerHTML='';
@@ -1841,8 +1999,6 @@ function loop(){
     if(tk.spin&&!calm){tk.spin.rotation.y=t*1.6;tk.spin.position.y=1.25+Math.sin(t*2+tk.target.x)*.05}
     if(tk.fill&&!calm)tk.fill.material.opacity=.19+Math.sin(t*2.2+tk.target.x)*.05;
   });
-  if(camGoal){const k=calm?1:Math.min(1,dt*9);controls.target.lerp(camGoal.t,k);camera.position.lerp(camGoal.p,k)}
-  if(isDM()&&UI.follow&&t-camAt>.08){camAt=t;sendCam()}
   renderer.render(scene,camera);
   const w=app.clientWidth,hh=app.clientHeight, vis=shownRooms(), mv=masterView();
   ROOMS.forEach(r=>{
@@ -1857,7 +2013,7 @@ function loop(){
   if(UI.pop)placePop();
   requestAnimationFrame(loop);
 }
-if(new URLSearchParams(location.search).has('debug'))window.__dnd={S,UI,camera,controls,THREE,app,patchToken,addToken,loadFull,refreshAll,canStand,blocked:()=>[...blocked],dbg:()=>({el:clock.elapsedTime,role:S.role,follow:UI.follow,camGoal,camSent,camAt,fly:!!fly,scr:screenSeen})};
+if(new URLSearchParams(location.search).has('debug'))window.__dnd={S,UI,camera,controls,THREE,app,patchToken,addToken,loadFull,refreshAll,canStand,blocked:()=>[...blocked],dbg:()=>({el:clock.elapsedTime,role:S.role,fly:!!fly,scr:screenSeen})};
 loop(); init();
 })();
 </script>
